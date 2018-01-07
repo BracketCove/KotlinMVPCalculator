@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ButtonNumberPad" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:background">@drawable/background_btn_num_pad</item>
+    </style>
+
+    <style name="ButtonOperation" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:background">@drawable/background_btn_op</item>
+    </style>
+
+    <style name="TextViewDisplay">
+        <item name="android:textSize">34sp</item>
+        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="ButtonDelete" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorTransparentBlack</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:fontFamily">sans-serif-heavy</item>
+        <item name="android:background">@drawable/background_btn_delete</item>
+    </style>
+</resources>
