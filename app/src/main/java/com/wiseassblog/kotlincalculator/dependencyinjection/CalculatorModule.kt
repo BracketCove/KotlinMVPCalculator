@@ -1,6 +1,7 @@
 package com.wiseassblog.kotlincalculator.dependencyinjection
 
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
+import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.util.SchedulerProviderImpl
 import com.wiseassblog.kotlincalculator.view.CalculatorFragment
@@ -20,8 +21,8 @@ class CalculatorModule {
     }
 
     @Provides
-    fun providePresenter (view:IViewContract.View, calculator: ICalculator):IViewContract.Presenter {
-        return CalculatorPresenter(view, SchedulerProviderImpl(), calculator)
+    fun providePresenter (view:IViewContract.View, eval: EvaluateExpression):IViewContract.Presenter {
+        return CalculatorPresenter(view, SchedulerProviderImpl(), eval)
     }
 
 }

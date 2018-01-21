@@ -3,6 +3,8 @@ package com.wiseassblog.kotlincalculator.dependencyinjection
 import android.app.Application
 import android.content.Context
 import com.wiseassblog.kotlincalculator.data.CalculatorImpl
+import com.wiseassblog.kotlincalculator.domain.repository.IValidator
+import com.wiseassblog.kotlincalculator.data.ValidatorImpl
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import dagger.Module
 import dagger.Provides
@@ -28,4 +30,9 @@ class ApplicationModule {
         return CalculatorImpl()
     }
 
+    @Provides
+    @Singleton
+    fun provideValidator(): IValidator {
+        return ValidatorImpl()
+    }
 }

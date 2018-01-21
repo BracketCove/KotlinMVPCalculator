@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.widget.TextView
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.view.CalculatorFragment
 import dagger.android.AndroidInjection
@@ -23,13 +24,11 @@ class CalculatorActivity : AppCompatActivity() {
         val manager:FragmentManager = this.supportFragmentManager
 
         //Elvis Operator:
-        //
+        //if (object/function) returns/is null :? do this
         val view = manager.findFragmentByTag(VIEW) as CalculatorFragment?
                 ?: CalculatorFragment.newInstance()
 
         manager.beginTransaction().replace(R.id.root_activity_calculator, view).commit()
-
-
 
     }
 }

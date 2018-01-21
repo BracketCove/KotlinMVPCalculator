@@ -42,6 +42,7 @@ class CalculatorFragment : Fragment(), IViewContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.retainInstance = true
     }
 
     override fun onCreateView(inflater: LayoutInflater?,

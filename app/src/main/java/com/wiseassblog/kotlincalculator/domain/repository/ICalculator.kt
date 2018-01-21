@@ -1,6 +1,7 @@
 package com.wiseassblog.kotlincalculator.domain.repository
 
-import com.wiseassblog.kotlincalculator.viewmodel.DisplayVM
+import com.wiseassblog.kotlincalculator.data.datamodel.Expression
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
 import io.reactivex.Flowable
 
 /**
@@ -8,5 +9,5 @@ import io.reactivex.Flowable
  */
 interface ICalculator {
 
-    fun evaluateExpression(expression: String): Flowable<DisplayVM>
+    fun evaluateExpression(expression: String): Flowable<Expression>
 }
