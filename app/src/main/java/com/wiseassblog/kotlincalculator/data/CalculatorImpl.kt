@@ -5,7 +5,6 @@ import com.wiseassblog.kotlincalculator.data.datamodel.Expression
 import com.wiseassblog.kotlincalculator.data.datamodel.Operand
 import com.wiseassblog.kotlincalculator.data.datamodel.Operator
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
 import io.reactivex.Flowable
 import java.lang.IllegalArgumentException
 
