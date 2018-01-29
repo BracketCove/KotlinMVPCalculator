@@ -14,15 +14,18 @@ class CalculatorPresenter(private var view: IViewContract.View,
                           private val scheduler: BaseSchedulerProvider,
                           private val eval:EvaluateExpression
                          ): IViewContract.Presenter {
+    override fun onLongDeleteClick() {
+        view.setDisplay("")
+    }
 
     private val eventStream = CompositeDisposable()
 
     override fun onInputButtonClick(value: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        view.setDisplay(view.getCurrentExpression()+value)
     }
 
     override fun onDeleteClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        view.setDisplay(view.getCurrentExpression().dropLast(1))
     }
 
 

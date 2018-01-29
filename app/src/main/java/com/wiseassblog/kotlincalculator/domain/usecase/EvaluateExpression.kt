@@ -16,8 +16,10 @@ import io.reactivex.functions.BiFunction
  */
 class EvaluateExpression(private val calculator: ICalculator,
                          private val validator: IValidator,
-                         private val scheduler: BaseSchedulerProvider,
-                         private val disposables:CompositeDisposable) : BaseUseCase<CalculatorVM> {
+                         private val scheduler: BaseSchedulerProvider) : BaseUseCase<CalculatorVM> {
+    init {
+         val disposables = CompositeDisposable()
+    }
 
     override fun execute(expression: String): Flowable<CalculatorVM> {
 

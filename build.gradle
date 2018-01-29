@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.20'
+    ext.kotlin_version = '1.2.21'
     repositories {
         google()
        jcenter()
@@ -34,6 +34,8 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+
+
 //Versions
 ext {
 
@@ -44,10 +46,10 @@ ext {
     supportLibrary = '26.1.0'
     googleServices = '11.0.4'
     constraintLayout = '1.0.2'
-    lifecycle = '1.0.0'
+    lifecycle = '1.1.0'
 
     //Kotlin
-    kotlinVersion = '1.2.20-release-Studio3.0-1'
+    kotlinVersion = '1.2.21-release-Studio3.1-1'
 
     //3rd Party Libs
     rxJava = '2.1.7'

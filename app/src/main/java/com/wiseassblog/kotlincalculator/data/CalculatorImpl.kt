@@ -24,7 +24,6 @@ class CalculatorImpl : ICalculator {
         val operators: MutableList<Operator> = getOperators(expression)
         val operands: MutableList<Operand> = getOperands(expression)
 
-
         while (operands.size > 1) {
             val firstOperand = operands[0]
             val secondOperand = operands[1]

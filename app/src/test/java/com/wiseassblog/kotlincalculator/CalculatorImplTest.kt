@@ -1,6 +1,7 @@
 package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.data.CalculatorImpl
+import com.wiseassblog.kotlincalculator.data.datamodel.Expression
 import com.wiseassblog.kotlincalculator.data.datamodel.Operand
 import com.wiseassblog.kotlincalculator.data.datamodel.Operator
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
@@ -54,39 +55,24 @@ class CalculatorImplTest {
         assertTrue(operators == OPERATORS)
     }
 
-//    @Test
-//    fun evaluatePair(){
-//        calc.evaluatePair(OPERANDS[0], OPERATORS[0], OPERANDS[1], OPERATORS[1])
-//    }
-
-
     @Test
     fun onEvaluateValidSimpleExpression() {
-        val subscriber = TestSubscriber<CalculatorVM>()
+        val subscriber = TestSubscriber<Expression>()
 
         calc.evaluateExpression(SIMPLE_EXPRESSION).subscribeWith(subscriber)
 
-        assertTrue(subscriber.values()[0].result == SIMPLE_ANSWER)
+        assertTrue(subscriber.values()[0].value == SIMPLE_ANSWER)
     }
 //
     @Test
     fun onEvaluateValidComplexExpression() {
-        var subscriber = TestSubscriber<CalculatorVM>()
+        var subscriber = TestSubscriber<Expression>()
 
         calc.evaluateExpression(COMPLEX_EXPRESSION).subscribeWith(subscriber)
 
-    assertTrue(subscriber.values()[0].result == COMPLEX_ANSWER)
-
+    assertTrue(subscriber.values()[0].value == COMPLEX_ANSWER)
 }
-//
-//    @Test
-//    fun onEvaluateInvalidSimpleExpression() {
-//        var subscriber = TestSubscriber<CalculatorVM>()
-//
-//        calc.evaluateExpression(INVALID_EXPRESSION).subscribeWith(subscriber)
-//
-//        subscriber.assertValue(CalculatorVM.createSuccessModel(INVALID_ANSWER))
-//    }
+    
 }
 
 

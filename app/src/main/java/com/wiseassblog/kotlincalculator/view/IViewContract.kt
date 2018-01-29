@@ -16,6 +16,7 @@ interface IViewContract {
         fun onEvaluateClick()
         fun onInputButtonClick(value: String)
         fun onDeleteClick()
+        fun onLongDeleteClick()
     }
 }
 

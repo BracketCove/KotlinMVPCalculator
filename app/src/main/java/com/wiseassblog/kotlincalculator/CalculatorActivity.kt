@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.widget.TextView
+import com.wiseassblog.kotlincalculator.dependencyinjection.Injector
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.view.CalculatorFragment
 import dagger.android.AndroidInjection
@@ -26,7 +27,7 @@ class CalculatorActivity : AppCompatActivity() {
         //Elvis Operator:
         //if (object/function) returns/is null :? do this
         val view = manager.findFragmentByTag(VIEW) as CalculatorFragment?
-                ?: CalculatorFragment.newInstance()
+                ?: CalculatorFragment.newInstance(Injector)
 
         manager.beginTransaction().replace(R.id.root_activity_calculator, view).commit()
 

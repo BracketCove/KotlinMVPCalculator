@@ -1,6 +1,7 @@
 package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
+import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.view.IViewContract
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
@@ -33,7 +34,7 @@ class CalculatorPresenterTest {
     //Layer responsible for Data Management and Manipulation, you can think of calculator as the
     //"Model"; in a more classic sense of MVP
     @Mock
-    private lateinit var calculator: ICalculator
+    private lateinit var eval: EvaluateExpression
 
     val EXPRESSION = "2+2"
     val ANSWER = "4"
@@ -48,7 +49,7 @@ class CalculatorPresenterTest {
 
         scheduler = TestScheduler()
 
-        presenter = CalculatorPresenter(view, scheduler, calculator)
+        presenter = CalculatorPresenter(view, scheduler, eval)
     }
 
     /**
@@ -58,7 +59,7 @@ class CalculatorPresenterTest {
     @Test
     fun onEvaluateValidSimpleExpression() {
         //when this method is called...
-        Mockito.`when`(calculator.evaluateExpression(EXPRESSION))
+        Mockito.`when`(eval.execute(EXPRESSION))
                 //...do this
                 .thenReturn(
                         Flowable.just(
@@ -66,18 +67,25 @@ class CalculatorPresenterTest {
                         )
                 )
 
+
+        Mockito.`when`(view.getCurrentExpression())
+                //...do this
+                .thenReturn(
+                        EXPRESSION
+                )
+
         //this is the "Unit" what we are testing
-        presenter.onEvaluateClick(EXPRESSION)
+        presenter.onEvaluateClick()
 
         //These are the assertions which must be satisfied in order to pass the test
-        Mockito.verify(calculator).evaluateExpression(EXPRESSION)
+        Mockito.verify(eval).execute(EXPRESSION)
         Mockito.verify(view).setDisplay(ANSWER)
 
     }
 
     @Test
     fun onEvaluateInvalidExpression() {
-        Mockito.`when`(calculator.evaluateExpression(INVALID_EXPRESSION))
+        Mockito.`when`(eval.execute(INVALID_EXPRESSION))
                 //...do this
                 .thenReturn(
                         Flowable.just(
@@ -85,23 +93,35 @@ class CalculatorPresenterTest {
                         )
                 )
 
-        presenter.onEvaluateClick(INVALID_EXPRESSION)
+        Mockito.`when`(view.getCurrentExpression())
+                //...do this
+                .thenReturn(
+                        INVALID_EXPRESSION
+                )
 
-        Mockito.verify(calculator).evaluateExpression(INVALID_EXPRESSION)
+        presenter.onEvaluateClick()
+
+        Mockito.verify(eval).execute(INVALID_EXPRESSION)
         Mockito.verify(view).showError(INVALID_ANSWER)
     }
 
     @Test
     fun onEvaluateFatalError() {
-        Mockito.`when`(calculator.evaluateExpression(INVALID_EXPRESSION))
+        Mockito.`when`(eval.execute(INVALID_EXPRESSION))
                 //...do this
                 .thenReturn(
                         Flowable.error(Exception(INVALID_ANSWER))
                 )
 
-        presenter.onEvaluateClick(INVALID_EXPRESSION)
+        Mockito.`when`(view.getCurrentExpression())
+                //...do this
+                .thenReturn(
+                        INVALID_EXPRESSION
+                )
 
-        Mockito.verify(calculator).evaluateExpression(INVALID_EXPRESSION)
+        presenter.onEvaluateClick()
+
+        Mockito.verify(eval).execute(INVALID_EXPRESSION)
         Mockito.verify(view).restartFeature()
     }
 
