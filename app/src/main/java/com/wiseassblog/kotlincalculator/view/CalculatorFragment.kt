@@ -1,7 +1,6 @@
 package com.wiseassblog.kotlincalculator.view
 
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,16 +12,21 @@ import android.widget.Toast
 import com.wiseassblog.kotlincalculator.CalculatorActivity
 import com.wiseassblog.kotlincalculator.R
 import com.wiseassblog.kotlincalculator.dependencyinjection.Injector
-import dagger.android.AndroidInjection
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_calculator.*
-import javax.inject.Inject
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener {
+class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener, View.OnLongClickListener {
+    override fun onLongClick(v: View?): Boolean {
+        when (v?.id) {
+            R.id.btn_display_delete -> presenter.onLongDeleteClick()
+        }
+
+        return true
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_evaluate -> presenter.onEvaluateClick()
@@ -64,6 +68,7 @@ class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener 
         btn_evaluate.setOnClickListener(this)
         btn_decimal.setOnClickListener(this)
         btn_display_delete.setOnClickListener(this)
+        btn_display_delete.setOnLongClickListener(this)
 
         btn_number_one.setOnClickListener(this)
         btn_number_two.setOnClickListener(this)
