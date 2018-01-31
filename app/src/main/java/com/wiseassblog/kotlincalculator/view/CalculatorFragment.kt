@@ -16,6 +16,9 @@ import kotlinx.android.synthetic.main.fragment_calculator.*
 
 
 /**
+ * Please note: This class uses experimental synthetic layouts from kotlin-android-extensions lib
+ * (see build.gradle plugin)
+ *
  * A simple [Fragment] subclass.
  */
 class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener, View.OnLongClickListener {
@@ -29,7 +32,7 @@ class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener,
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btn_evaluate -> presenter.onEvaluateClick()
+            R.id.btn_evaluate -> presenter.onEvaluateClick(lbl_display.text.toString())
             R.id.btn_display_delete -> presenter.onDeleteClick()
             else -> {
                 if (v is Button) {
@@ -39,9 +42,21 @@ class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener,
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        presenter.bind()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.clear()
+    }
+
+
+    //todo: move to ViewModel
     lateinit var presenter: IViewContract.Presenter
 
-    companion object {
+    companion object {//TODO pass ViewModelProvider.Factory through Injector
         fun newInstance(injector:Injector) = CalculatorFragment().setPresenter(injector)
 
     }

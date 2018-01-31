@@ -4,7 +4,6 @@ import com.wiseassblog.kotlincalculator.data.CalculatorImpl
 import com.wiseassblog.kotlincalculator.data.datamodel.Expression
 import com.wiseassblog.kotlincalculator.data.datamodel.Operand
 import com.wiseassblog.kotlincalculator.data.datamodel.Operator
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Test
 import kotlin.test.assertTrue
@@ -13,7 +12,7 @@ import kotlin.test.assertTrue
  * Created by R_KAY on 1/6/2018.
  */
 class CalculatorImplTest {
-    private val calc = CalculatorImpl()
+    private val calc = CalculatorImpl
 
     val SIMPLE_EXPRESSION = "2+2"
     val SIMPLE_ANSWER = "4.0"
@@ -66,7 +65,7 @@ class CalculatorImplTest {
 //
     @Test
     fun onEvaluateValidComplexExpression() {
-        var subscriber = TestSubscriber<Expression>()
+        val subscriber = TestSubscriber<Expression>()
 
         calc.evaluateExpression(COMPLEX_EXPRESSION).subscribeWith(subscriber)
 

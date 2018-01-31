@@ -1,9 +1,11 @@
 package com.wiseassblog.kotlincalculator.presenter
 
+import android.arch.lifecycle.LifecycleObserver
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.util.BaseSchedulerProvider
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorUIModel
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subscribers.DisposableSubscriber
 
@@ -11,35 +13,45 @@ import io.reactivex.subscribers.DisposableSubscriber
  * Created by R_KAY on 12/20/2017.
  */
 class CalculatorPresenter(private var view: IViewContract.View,
+                          private var viewModel: CalculatorViewModel,
                           private val scheduler: BaseSchedulerProvider,
-                          private val eval:EvaluateExpression
-                         ): IViewContract.Presenter {
-    override fun onLongDeleteClick() {
-        view.setDisplay("")
-    }
+                          private val eval: EvaluateExpression) : IViewContract.Presenter,
+                                                                  LifecycleObserver  {
 
     private val eventStream = CompositeDisposable()
 
+    //Update the state, then the view.
+    override fun onLongDeleteClick() {
+        viewModel.setDisplayState(CalculatorUIModel.createSuccessModel(""))
+        view.setDisplay(viewModel.getsDisplayState())
+    }
+
     override fun onInputButtonClick(value: String) {
-        view.setDisplay(view.getCurrentExpression()+value)
+        viewModel.setDisplayState(
+                CalculatorUIModel.createSuccessModel(viewModel.getsDisplayState() + value)
+        )
+        view.setDisplay(viewModel.uiModel.result)
     }
 
     override fun onDeleteClick() {
-        view.setDisplay(view.getCurrentExpression().dropLast(1))
+        viewModel.setDisplayState(
+                CalculatorUIModel.createSuccessModel(viewModel.getsDisplayState().dropLast(1))
+        )
+        view.setDisplay(viewModel.uiModel.result)
     }
 
-
-    override fun onEvaluateClick() {
+    //Strongly considering trying coroutines here; could make another branch.
+    override fun onEvaluateClick(expression: String) {
         eventStream.add(
-                eval.execute(view.getCurrentExpression())
+                eval.execute(expression)
                         .observeOn(scheduler.getUiScheduler())
-                        .subscribeWith(object: DisposableSubscriber<CalculatorVM>(){
-                            override fun onNext(vm: CalculatorVM?) {
-                                if (vm!!.successful){
-                                    view.setDisplay(vm.result)
+                        .subscribeWith(object : DisposableSubscriber<CalculatorUIModel>() {
+                            override fun onNext(uiModel: CalculatorUIModel?) {
+                                if (uiModel!!.successful) {
+                                    viewModel.setDisplayState(uiModel)
+                                    view.setDisplay(viewModel.getsDisplayState())
                                 } else {
-                                    //recoverable errors
-                                    view.showError(vm.result)
+                                    view.showError(uiModel.result)
                                 }
                             }
 
@@ -58,6 +70,14 @@ class CalculatorPresenter(private var view: IViewContract.View,
     private fun restartFeature() {
         eventStream.clear()
         view.restartFeature()
+    }
+
+    override fun bind() {
+        view.setDisplay(viewModel.getsDisplayState())
+    }
+
+    override fun clear() {
+        eventStream.clear()
     }
 
 }

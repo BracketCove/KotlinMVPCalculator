@@ -21,7 +21,7 @@ class CalculatorActivity : AppCompatActivity() {
         //Elvis Operator:
         //if (object/function) returns/is null :? do this
         val view = manager.findFragmentByTag(VIEW) as CalculatorFragment?
-                ?: CalculatorFragment.newInstance(Injector)
+                ?: CalculatorFragment.newInstance(Injector(this))
 
         manager.beginTransaction().replace(R.id.root_activity_calculator, view).commit()
 

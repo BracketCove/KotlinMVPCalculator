@@ -5,7 +5,7 @@ import com.wiseassblog.kotlincalculator.data.datamodel.Expression
 import com.wiseassblog.kotlincalculator.domain.BaseUseCase
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import com.wiseassblog.kotlincalculator.util.BaseSchedulerProvider
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorUIModel
 import io.reactivex.Flowable
 import io.reactivex.Flowable.zip
 import io.reactivex.disposables.CompositeDisposable
@@ -16,12 +16,12 @@ import io.reactivex.functions.BiFunction
  */
 class EvaluateExpression(private val calculator: ICalculator,
                          private val validator: IValidator,
-                         private val scheduler: BaseSchedulerProvider) : BaseUseCase<CalculatorVM> {
+                         private val scheduler: BaseSchedulerProvider) : BaseUseCase<CalculatorUIModel> {
     init {
          val disposables = CompositeDisposable()
     }
 
-    override fun execute(expression: String): Flowable<CalculatorVM> {
+    override fun execute(expression: String): Flowable<CalculatorUIModel> {
 
         //Prepare Observables for zip operator
         val validationResult = validator.validateExpression(expression)
@@ -30,14 +30,14 @@ class EvaluateExpression(private val calculator: ICalculator,
         return zip(
                 validationResult.subscribeOn(scheduler.getComputationScheduler()),
                 calculatorResult.subscribeOn(scheduler.getComputationScheduler()),
-                object : BiFunction<Expression, Expression, CalculatorVM> {
-                    override fun apply(valid: Expression, evaluated: Expression): CalculatorVM {
+                object : BiFunction<Expression, Expression, CalculatorUIModel> {
+                    override fun apply(valid: Expression, evaluated: Expression): CalculatorUIModel {
                         //failed to validate, no need to proceed further
                         if (!valid.isValid) {
-                            return CalculatorVM.createFailureModel(valid.value)
+                            return CalculatorUIModel.createFailureModel(valid.value)
                         }
 
-                        return CalculatorVM.createSuccessModel(evaluated.value)
+                        return CalculatorUIModel.createSuccessModel(evaluated.value)
                     }
                 }
         )

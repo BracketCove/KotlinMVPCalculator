@@ -11,7 +11,7 @@ import java.lang.IllegalArgumentException
 /**
  * Created by R_KAY on 12/21/2017.
  */
-class CalculatorImpl : ICalculator {
+object CalculatorImpl : ICalculator {
     override fun evaluateExpression(expression: String): Flowable<Expression> {
 
         return evaluate(expression)
@@ -69,8 +69,9 @@ class CalculatorImpl : ICalculator {
 
     @VisibleForTesting
     internal fun getOperators(expression: String): MutableList<Operator> {
-        //this ugly stuff is called Regex; Regular Expression
-        val operators = expression.split("\\d+".toRegex())
+        //this ugly stuff is called Regex; Regular Expression/
+        //Basically saying split based on number or decimal numbers.
+        val operators = expression.split("\\d+(?:\\.\\d+)?".toRegex())
                 .filterNot { it == "" }
                 .toMutableList()
         val outPut: MutableList<Operator> = arrayListOf()

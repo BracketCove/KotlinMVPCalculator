@@ -1,10 +1,11 @@
 package com.wiseassblog.kotlincalculator
 
-import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
+import android.arch.lifecycle.ViewModel
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorVM
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorUIModel
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
 import io.reactivex.Flowable
 import org.junit.Before
 import org.junit.Test
@@ -30,11 +31,15 @@ class CalculatorPresenterTest {
     @Mock
     private lateinit var view: IViewContract.View
 
+    @Mock
+    private lateinit var viewModel: CalculatorViewModel
+
     //Although I personally prefer the term "Data" instead of "Model" to refer to an Architectural
     //Layer responsible for Data Management and Manipulation, you can think of calculator as the
     //"Model"; in a more classic sense of MVP
     @Mock
     private lateinit var eval: EvaluateExpression
+
 
     val EXPRESSION = "2+2"
     val ANSWER = "4"
@@ -49,7 +54,7 @@ class CalculatorPresenterTest {
 
         scheduler = TestScheduler()
 
-        presenter = CalculatorPresenter(view, scheduler, eval)
+        presenter = CalculatorPresenter(view, viewModel, scheduler, eval)
     }
 
     /**
@@ -58,27 +63,29 @@ class CalculatorPresenterTest {
      */
     @Test
     fun onEvaluateValidSimpleExpression() {
-        //when this method is called...
+        val result = CalculatorUIModel.createSuccessModel(ANSWER)
+
         Mockito.`when`(eval.execute(EXPRESSION))
-                //...do this
                 .thenReturn(
                         Flowable.just(
-                                CalculatorVM.createSuccessModel(ANSWER)
+                                result
                         )
                 )
 
 
-        Mockito.`when`(view.getCurrentExpression())
-                //...do this
+
+        Mockito.`when`(viewModel.getsDisplayState())
                 .thenReturn(
-                        EXPRESSION
+                    ANSWER
                 )
 
         //this is the "Unit" what we are testing
-        presenter.onEvaluateClick()
+        presenter.onEvaluateClick(EXPRESSION)
 
         //These are the assertions which must be satisfied in order to pass the test
         Mockito.verify(eval).execute(EXPRESSION)
+        Mockito.verify(viewModel).setDisplayState(result)
+        Mockito.verify(viewModel).getsDisplayState()
         Mockito.verify(view).setDisplay(ANSWER)
 
     }
@@ -89,17 +96,11 @@ class CalculatorPresenterTest {
                 //...do this
                 .thenReturn(
                         Flowable.just(
-                                CalculatorVM.createFailureModel(INVALID_ANSWER)
+                                CalculatorUIModel.createFailureModel(INVALID_ANSWER)
                         )
                 )
 
-        Mockito.`when`(view.getCurrentExpression())
-                //...do this
-                .thenReturn(
-                        INVALID_EXPRESSION
-                )
-
-        presenter.onEvaluateClick()
+        presenter.onEvaluateClick(INVALID_EXPRESSION)
 
         Mockito.verify(eval).execute(INVALID_EXPRESSION)
         Mockito.verify(view).showError(INVALID_ANSWER)
@@ -113,13 +114,8 @@ class CalculatorPresenterTest {
                         Flowable.error(Exception(INVALID_ANSWER))
                 )
 
-        Mockito.`when`(view.getCurrentExpression())
-                //...do this
-                .thenReturn(
-                        INVALID_EXPRESSION
-                )
 
-        presenter.onEvaluateClick()
+        presenter.onEvaluateClick(INVALID_EXPRESSION)
 
         Mockito.verify(eval).execute(INVALID_EXPRESSION)
         Mockito.verify(view).restartFeature()

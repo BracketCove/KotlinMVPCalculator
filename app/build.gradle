@@ -64,6 +64,9 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
+    implementation "android.arch.lifecycle:extensions:$lifecycle"
+    kapt "android.arch.lifecycle:compiler:$lifecycle"
+
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
