@@ -1,10 +1,9 @@
 package com.wiseassblog.kotlincalculator
 
-import android.arch.lifecycle.ViewModel
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorUIModel
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorDataModel
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
 import io.reactivex.Flowable
 import org.junit.Before
@@ -63,7 +62,7 @@ class CalculatorPresenterTest {
      */
     @Test
     fun onEvaluateValidSimpleExpression() {
-        val result = CalculatorUIModel.createSuccessModel(ANSWER)
+        val result = CalculatorDataModel.createSuccessModel(ANSWER)
 
         Mockito.`when`(eval.execute(EXPRESSION))
                 .thenReturn(
@@ -74,7 +73,7 @@ class CalculatorPresenterTest {
 
 
 
-        Mockito.`when`(viewModel.getsDisplayState())
+        Mockito.`when`(viewModel.getDisplayStateFlowable())
                 .thenReturn(
                     ANSWER
                 )
@@ -85,7 +84,7 @@ class CalculatorPresenterTest {
         //These are the assertions which must be satisfied in order to pass the test
         Mockito.verify(eval).execute(EXPRESSION)
         Mockito.verify(viewModel).setDisplayState(result)
-        Mockito.verify(viewModel).getsDisplayState()
+        Mockito.verify(viewModel).getDisplayStateFlowable()
         Mockito.verify(view).setDisplay(ANSWER)
 
     }
@@ -96,7 +95,7 @@ class CalculatorPresenterTest {
                 //...do this
                 .thenReturn(
                         Flowable.just(
-                                CalculatorUIModel.createFailureModel(INVALID_ANSWER)
+                                CalculatorDataModel.createFailureModel(INVALID_ANSWER)
                         )
                 )
 

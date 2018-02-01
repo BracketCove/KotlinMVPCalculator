@@ -1,6 +1,8 @@
 package com.wiseassblog.kotlincalculator.view
 
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorUIModel
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorDataModel
+import io.reactivex.Flowable
+import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by R_KAY on 10/8/2017.
@@ -15,8 +17,13 @@ interface IViewContract {
     }
 
     interface ViewModel {
-       fun setDisplayState(uiModel: CalculatorUIModel)
-       fun getsDisplayState():String
+       fun setDisplayState(result: String)
+
+        //Get something (Flowable in this case)
+        // which will emit a CalcUIModel as soon as it is set (above method)
+       fun getDisplayStatePublisher(): Flowable<String>
+
+        fun getDisplayState():String
     }
 
     interface Presenter {

@@ -4,7 +4,7 @@ import com.wiseassblog.kotlincalculator.data.ValidatorImpl
 import com.wiseassblog.kotlincalculator.data.datamodel.Expression
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorUIModel
+import com.wiseassblog.kotlincalculator.viewmodel.CalculatorDataModel
 import io.reactivex.Flowable
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Before
@@ -38,7 +38,7 @@ class EvaluateExpressionTest {
 
     @Test
     fun onUseCaseExecuted() {
-        val subscriber = TestSubscriber<CalculatorUIModel>()
+        val subscriber = TestSubscriber<CalculatorDataModel>()
 
         Mockito.`when`(validator.validateExpression(EXPRESSION))
                 .thenReturn(

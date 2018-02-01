@@ -2,30 +2,36 @@ package com.wiseassblog.kotlincalculator.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import com.wiseassblog.kotlincalculator.view.IViewContract
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subscribers.DisposableSubscriber
+import io.reactivex.subjects.PublishSubject
 
 /**
- * Wondering is with UI Model and ViewModel? Well, I'm really not the expert here (not sarcasm),
- * however I would actually prefer to call the thing which I pass around my Presentation Layer as a
- * a ViewModel (I'm referring to what is currently called CalculatorUIModel). I would actually call
- * this thing a ViewController, but that probably would've confused people even worse.
+ * This thing contains the state of the View, and makes it easy for the Presenter to sort out
+ * calls to the View.
  *
- * Let's try to forget about the names (the concepts are what matter) and focus on the goal of
- * separation of concerns and immutability.
+ * Shout-out to mon ami Darel Bitsy for suggestion of making the ViewModel's data into a Publisher
+ * which Presenter can subscribe to.
  * Created by R_KAY on 1/29/2018.
  */
-class CalculatorViewModel(var uiModel: CalculatorUIModel
-                          = CalculatorUIModel.createSuccessModel("")) : ViewModel(),
+class CalculatorViewModel(private val dataModel: CalculatorDataModel
+                          = CalculatorDataModel.createSuccessModel(""),
+                          private val displayFlowable: PublishSubject<String>
+                          = PublishSubject.create()) : ViewModel(),
         IViewContract.ViewModel {
-
-    override fun getsDisplayState(): String {
-        return uiModel.result
+    override fun getDisplayState(): String {
+        return dataModel.result
     }
 
-    override fun setDisplayState(uiModel: CalculatorUIModel) {
-        this.uiModel = uiModel
+
+    //Think of this like RxJava
+    override fun getDisplayStatePublisher(): Flowable<String> {
+        return displayFlowable.toFlowable(BackpressureStrategy.LATEST)
+    }
+
+    override fun setDisplayState(result: String) {
+        this.dataModel.result = result
+        displayFlowable.onNext(getDisplayState())
     }
 }
 
