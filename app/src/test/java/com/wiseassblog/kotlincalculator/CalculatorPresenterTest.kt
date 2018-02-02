@@ -3,7 +3,7 @@ package com.wiseassblog.kotlincalculator
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorDataModel
+import com.wiseassblog.kotlincalculator.viewmodel.ExpressionDataModel
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
 import io.reactivex.Flowable
 import org.junit.Before
@@ -62,7 +62,7 @@ class CalculatorPresenterTest {
      */
     @Test
     fun onEvaluateValidSimpleExpression() {
-        val result = CalculatorDataModel.createSuccessModel(ANSWER)
+        val result = ExpressionDataModel.createSuccessModel(ANSWER)
 
         Mockito.`when`(eval.execute(EXPRESSION))
                 .thenReturn(
@@ -71,22 +71,19 @@ class CalculatorPresenterTest {
                         )
                 )
 
-
-
-        Mockito.`when`(viewModel.getDisplayStateFlowable())
+        Mockito.`when`(eval.execute(EXPRESSION))
                 .thenReturn(
-                    ANSWER
+                        Flowable.just(
+                                result
+                        )
                 )
 
-        //this is the "Unit" what we are testing
+       //this is the "Unit" what we are testing
         presenter.onEvaluateClick(EXPRESSION)
 
         //These are the assertions which must be satisfied in order to pass the test
         Mockito.verify(eval).execute(EXPRESSION)
-        Mockito.verify(viewModel).setDisplayState(result)
-        Mockito.verify(viewModel).getDisplayStateFlowable()
-        Mockito.verify(view).setDisplay(ANSWER)
-
+        Mockito.verify(viewModel).setDisplayState(ANSWER)
     }
 
     @Test
@@ -95,7 +92,7 @@ class CalculatorPresenterTest {
                 //...do this
                 .thenReturn(
                         Flowable.just(
-                                CalculatorDataModel.createFailureModel(INVALID_ANSWER)
+                                ExpressionDataModel.createFailureModel(INVALID_ANSWER)
                         )
                 )
 

@@ -1,10 +1,9 @@
 package com.wiseassblog.kotlincalculator.presenter
 
-import android.arch.lifecycle.LifecycleObserver
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.util.BaseSchedulerProvider
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorDataModel
+import com.wiseassblog.kotlincalculator.viewmodel.ExpressionDataModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subscribers.DisposableSubscriber
 
@@ -41,8 +40,8 @@ class CalculatorPresenter(private var view: IViewContract.View,
         eventStream.add(
                 eval.execute(expression)
                         .observeOn(scheduler.getUiScheduler())
-                        .subscribeWith(object : DisposableSubscriber<CalculatorDataModel>() {
-                            override fun onNext(dataModel: CalculatorDataModel?) {
+                        .subscribeWith(object : DisposableSubscriber<ExpressionDataModel>() {
+                            override fun onNext(dataModel: ExpressionDataModel?) {
                                 if (dataModel!!.successful) {
                                     viewModel.setDisplayState(dataModel.result)
                                 } else {

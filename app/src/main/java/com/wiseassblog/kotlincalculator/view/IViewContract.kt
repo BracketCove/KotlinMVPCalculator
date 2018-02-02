@@ -1,8 +1,6 @@
 package com.wiseassblog.kotlincalculator.view
 
-import com.wiseassblog.kotlincalculator.viewmodel.CalculatorDataModel
 import io.reactivex.Flowable
-import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by R_KAY on 10/8/2017.
