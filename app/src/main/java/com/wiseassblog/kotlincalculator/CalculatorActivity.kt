@@ -9,16 +9,16 @@ import com.wiseassblog.kotlincalculator.view.CalculatorFragment
 class CalculatorActivity : AppCompatActivity() {
 
     companion object {
-        val VIEW:String = "VIEW"
+        val VIEW: String = "VIEW"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calculator)
 
-        val manager:FragmentManager = this.supportFragmentManager
+        val manager: FragmentManager = this.supportFragmentManager
 
-        //Elvis Operator:
+        //Elvis OperatorDataModel:
         //if (object/function) returns/is null :? do this
         val view = manager.findFragmentByTag(VIEW) as CalculatorFragment?
                 ?: CalculatorFragment.newInstance(Injector(this))

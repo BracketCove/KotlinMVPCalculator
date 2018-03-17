@@ -3,7 +3,7 @@ package com.wiseassblog.kotlincalculator
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.viewmodel.ExpressionDataModel
+import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
 import io.reactivex.Flowable
 import org.junit.Before
@@ -44,7 +44,7 @@ class CalculatorPresenterTest {
     val ANSWER = "4"
 
     val INVALID_EXPRESSION = "2+Q"
-    val INVALID_ANSWER = "Error: Invalid Expression"
+    val INVALID_ANSWER = "Error: Invalid ExpressionDataModel"
 
 
     @Before
@@ -62,7 +62,7 @@ class CalculatorPresenterTest {
      */
     @Test
     fun onEvaluateValidSimpleExpression() {
-        val result = ExpressionDataModel.createSuccessModel(ANSWER)
+        val result = Expression.createSuccessModel(ANSWER)
 
         Mockito.`when`(eval.execute(EXPRESSION))
                 .thenReturn(
@@ -92,7 +92,7 @@ class CalculatorPresenterTest {
                 //...do this
                 .thenReturn(
                         Flowable.just(
-                                ExpressionDataModel.createFailureModel(INVALID_ANSWER)
+                                Expression.createFailureModel(INVALID_ANSWER)
                         )
                 )
 

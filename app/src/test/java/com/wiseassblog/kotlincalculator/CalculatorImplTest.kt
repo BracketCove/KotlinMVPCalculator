@@ -1,9 +1,9 @@
 package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.data.CalculatorImpl
-import com.wiseassblog.kotlincalculator.data.datamodel.Expression
-import com.wiseassblog.kotlincalculator.data.datamodel.Operand
-import com.wiseassblog.kotlincalculator.data.datamodel.Operator
+import com.wiseassblog.kotlincalculator.data.datamodel.ExpressionDataModel
+import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
+import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Test
 import kotlin.test.assertTrue
@@ -19,44 +19,44 @@ class CalculatorImplTest {
 
     val COMPLEX_EXPRESSION = "2+2-1*3+4"
     val COMPLEX_ANSWER = "5.0"
-    val OPERANDS = listOf<Operand>(
-            Operand("2"),
-            Operand("2"),
-            Operand("1"),
-            Operand("3"),
-            Operand("4")
+    val OPERANDS = listOf<OperandDataModel>(
+            OperandDataModel("2"),
+            OperandDataModel("2"),
+            OperandDataModel("1"),
+            OperandDataModel("3"),
+            OperandDataModel("4")
     )
-    val OPERATORS = listOf<Operator>(
-            Operator("+"),
-            Operator("-"),
-            Operator("*"),
-            Operator("+")
+    val OPERATORS = listOf<OperatorDataModel>(
+            OperatorDataModel("+"),
+            OperatorDataModel("-"),
+            OperatorDataModel("*"),
+            OperatorDataModel("+")
     )
     val INVALID_EXPRESSION_ONE = "2+"
     val INVALID_EXPRESSION_TWO = "+2"
     val INVALID_EXPRESSION_THREE = "2+-"
-    val INVALID_ANSWER = "Error: Invalid Expression"
+    val INVALID_ANSWER = "Error: Invalid ExpressionDataModel"
 
     /**
      * Get operands of current expression
      */
     @Test
     fun getOperands() {
-        val operands: List<Operand> = calc.getOperands(COMPLEX_EXPRESSION)
+        val operands: List<OperandDataModel> = calc.getOperands(COMPLEX_EXPRESSION)
 
         assertTrue(operands == OPERANDS)
     }
 
     @Test
     fun getOperators() {
-        val operators: List<Operator> = calc.getOperators(COMPLEX_EXPRESSION)
+        val operatorDataModels: List<OperatorDataModel> = calc.getOperators(COMPLEX_EXPRESSION)
 
-        assertTrue(operators == OPERATORS)
+        assertTrue(operatorDataModels == OPERATORS)
     }
 
     @Test
     fun onEvaluateValidSimpleExpression() {
-        val subscriber = TestSubscriber<Expression>()
+        val subscriber = TestSubscriber<ExpressionDataModel>()
 
         calc.evaluateExpression(SIMPLE_EXPRESSION).subscribeWith(subscriber)
 
@@ -65,7 +65,7 @@ class CalculatorImplTest {
 //
     @Test
     fun onEvaluateValidComplexExpression() {
-        val subscriber = TestSubscriber<Expression>()
+        val subscriber = TestSubscriber<ExpressionDataModel>()
 
         calc.evaluateExpression(COMPLEX_EXPRESSION).subscribeWith(subscriber)
 

@@ -1,6 +1,6 @@
 package com.wiseassblog.kotlincalculator
 
-import com.wiseassblog.kotlincalculator.util.BaseSchedulerProvider
+import com.wiseassblog.kotlincalculator.util.scheduler.BaseSchedulerProvider
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 

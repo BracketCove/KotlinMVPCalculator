@@ -1,6 +1,6 @@
 package com.wiseassblog.kotlincalculator
 
-import com.wiseassblog.kotlincalculator.data.datamodel.Operator
+import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
 import org.junit.Test
 
 /**
@@ -16,7 +16,7 @@ class OperatorTest {
 
     @Test
     fun TestEvaluateFirst() {
-        val testOp = Operator(MULTIPLY)
+        val testOp = OperatorDataModel(MULTIPLY)
 
         //assert true
         assert(testOp.evaluateFirst)
@@ -24,7 +24,7 @@ class OperatorTest {
 
     @Test
     fun TestEvaluateLast() {
-        val testOp = Operator(ADD)
+        val testOp = OperatorDataModel(ADD)
 
         //assert true
         assert(!testOp.evaluateFirst)

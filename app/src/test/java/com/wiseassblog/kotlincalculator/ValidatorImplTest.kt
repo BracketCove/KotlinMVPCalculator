@@ -1,8 +1,6 @@
 package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.data.ValidatorImpl
-import com.wiseassblog.kotlincalculator.data.datamodel.Expression
-import io.reactivex.subscribers.TestSubscriber
 import org.junit.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -14,56 +12,65 @@ class ValidatorImplTest {
 
     private val validator = ValidatorImpl
 
+
     val COMPLEX_EXPRESSION = "2+2-1*3+4"
     val SIMPLE_EXPRESSION = "2+2"
     val INVALID_EXPRESSION_ONE = "2+"
     val INVALID_EXPRESSION_TWO = "+2"
     val INVALID_EXPRESSION_THREE = "2+-2"
+    val INVALID_EXPRESSION_FOUR = "."
+    val INVALID_EXPRESSION_FIVE = "2..0+2"
 
 
     @Test
     fun validExpressionTestOne(){
-        val subscriber = TestSubscriber<Expression>()
 
-        validator.validateExpression(SIMPLE_EXPRESSION).subscribeWith(subscriber)
+        //all we're saying here is: assert that validator returns true when given a valid simple
+        //expression
+        assertTrue(validator.validateExpression(SIMPLE_EXPRESSION))
 
-        assertTrue(subscriber.values()[0].isValid)
     }
 
     @Test
     fun validExpressionTestTwo(){
-        var subscriber = TestSubscriber<Expression>()
 
-        validator.validateExpression(COMPLEX_EXPRESSION).subscribeWith(subscriber)
+        assertTrue(validator.validateExpression(COMPLEX_EXPRESSION))
 
-        assertTrue(subscriber.values()[0].isValid)
     }
 
     @Test
     fun invalidExpressionTestOne(){
-        val subscriber = TestSubscriber<Expression>()
 
-        validator.validateExpression(INVALID_EXPRESSION_ONE).subscribeWith(subscriber)
+       assertFalse(validator.validateExpression(INVALID_EXPRESSION_ONE))
 
-        assertFalse(subscriber.values()[0].isValid)
     }
 
     @Test
     fun invalidExpressionTestTwo(){
-        val subscriber = TestSubscriber<Expression>()
 
-        validator.validateExpression(INVALID_EXPRESSION_TWO).subscribeWith(subscriber)
+        assertFalse(validator.validateExpression(INVALID_EXPRESSION_TWO))
 
-        assertFalse(subscriber.values()[0].isValid)
     }
 
     @Test
     fun invalidExpressionTestThree(){
-        val subscriber = TestSubscriber<Expression>()
 
-        validator.validateExpression(INVALID_EXPRESSION_THREE).subscribeWith(subscriber)
+        assertFalse(validator.validateExpression(INVALID_EXPRESSION_THREE))
 
-        assertFalse(subscriber.values()[0].isValid)
+    }
+
+    @Test
+    fun invalidExpressionTestFour(){
+
+        assertFalse(validator.validateExpression(INVALID_EXPRESSION_FOUR))
+
+    }
+
+    @Test
+    fun invalidExpressionTestFive(){
+
+        assertFalse(validator.validateExpression(INVALID_EXPRESSION_FIVE))
+
     }
 
 

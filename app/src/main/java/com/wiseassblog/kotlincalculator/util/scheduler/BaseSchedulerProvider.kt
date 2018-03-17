@@ -1,4 +1,4 @@
-package com.wiseassblog.kotlincalculator.util
+package com.wiseassblog.kotlincalculator.util.scheduler
 
 import io.reactivex.Scheduler
 

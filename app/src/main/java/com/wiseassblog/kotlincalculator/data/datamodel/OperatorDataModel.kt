@@ -3,7 +3,7 @@ package com.wiseassblog.kotlincalculator.data.datamodel
 import java.lang.IllegalArgumentException
 
 /**
- * Data class for an Operator. Operator is one of:
+ * Data class for an OperatorDataModel. OperatorDataModel is one of:
  * - char "*"; multiply
  * - char "/"; divide
  * - char "+"; add
@@ -13,7 +13,7 @@ import java.lang.IllegalArgumentException
  * Created by R_KAY on 9/25/2017.
  */
 
-data class Operator(val operatorValue: String){
+data class OperatorDataModel(val operatorValue: String){
     val evaluateFirst:Boolean = checkPriority(operatorValue)
 
     private fun checkPriority(operatorValue: String): Boolean {
@@ -22,7 +22,7 @@ data class Operator(val operatorValue: String){
             "/" -> true
             "+" -> false
             "-" -> false
-            else -> throw  IllegalArgumentException("Illegal Operator.")
+            else -> throw  IllegalArgumentException("Illegal OperatorDataModel.")
         }
     }
 

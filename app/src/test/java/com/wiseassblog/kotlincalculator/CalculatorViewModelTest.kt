@@ -1,10 +1,8 @@
 package com.wiseassblog.kotlincalculator
 
-import com.wiseassblog.kotlincalculator.data.datamodel.Expression
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Test
-import org.mockito.Mock
 import kotlin.test.assertTrue
 
 /**

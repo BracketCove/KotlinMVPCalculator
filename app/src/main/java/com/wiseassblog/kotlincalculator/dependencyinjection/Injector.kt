@@ -1,15 +1,12 @@
 package com.wiseassblog.kotlincalculator.dependencyinjection
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import com.wiseassblog.kotlincalculator.data.CalculatorImpl
 import com.wiseassblog.kotlincalculator.data.ValidatorImpl
-import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
-import com.wiseassblog.kotlincalculator.domain.repository.IValidator
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
-import com.wiseassblog.kotlincalculator.util.SchedulerProviderImpl
+import com.wiseassblog.kotlincalculator.util.scheduler.SchedulerProviderImpl
 import com.wiseassblog.kotlincalculator.view.CalculatorFragment
 import com.wiseassblog.kotlincalculator.view.IViewContract
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel

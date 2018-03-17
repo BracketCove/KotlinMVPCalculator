@@ -1,61 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.21'
-    repositories {
-        google()
-       jcenter()
-    }
+    apply from: 'versions.gradle'
+    addRepos(repositories)
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath deps.android_gradle_plugin
+        classpath deps.kotlin.kotlin_gradle_plugin
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
 
 allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-        apiVersion = '1.1'
-        languageVersion = '1.1'
-    }
+    addRepos(repositories)
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-
-
-//Versions
-ext {
-
-    compileSdk = 26
-    buildTools = "26.0.1"
-    minSdk = 21
-    targetSdk = 26
-    supportLibrary = '26.1.0'
-    googleServices = '11.0.4'
-    constraintLayout = '1.0.2'
-    lifecycle = '1.1.0'
-
-    //Kotlin
-    kotlinVersion = '1.2.21-release-Studio3.1-1'
-
-    //3rd Party Libs
-    rxJava = '2.1.7'
-    rxAndroid = '2.0.1'
-    jUnit = '4.12'
-    mockito = '2.13.0'
-    dagger = '2.14.1'
-
 }

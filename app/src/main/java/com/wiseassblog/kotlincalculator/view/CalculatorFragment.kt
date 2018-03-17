@@ -53,10 +53,9 @@ class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener,
     }
 
 
-    //todo: move to ViewModel
     lateinit var presenter: IViewContract.Presenter
 
-    companion object {//TODO pass ViewModelProvider.Factory through Injector
+    companion object {
         fun newInstance(injector:Injector) = CalculatorFragment().setPresenter(injector)
 
     }

@@ -1,10 +1,10 @@
 package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.data.ValidatorImpl
-import com.wiseassblog.kotlincalculator.data.datamodel.Expression
+import com.wiseassblog.kotlincalculator.data.datamodel.ExpressionDataModel
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
-import com.wiseassblog.kotlincalculator.viewmodel.ExpressionDataModel
+import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
 import io.reactivex.Flowable
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Before
@@ -17,7 +17,7 @@ import kotlin.test.assertTrue
 /**
  * Created by R_KAY on 1/17/2018.
  */
-class EvaluateExpressionTest {
+class EvaluateExpressionModelTest {
 
     @Mock
     lateinit var calc: ICalculator
@@ -38,19 +38,17 @@ class EvaluateExpressionTest {
 
     @Test
     fun onUseCaseExecuted() {
-        val subscriber = TestSubscriber<ExpressionDataModel>()
+        val subscriber = TestSubscriber<Expression>()
 
         Mockito.`when`(validator.validateExpression(EXPRESSION))
                 .thenReturn(
-                        Flowable.just(
-                                Expression(EXPRESSION, true)
-                        )
+                        true
                 )
 
         Mockito.`when`(calc.evaluateExpression(EXPRESSION))
                 .thenReturn(
                         Flowable.just(
-                                Expression(ANSWER, true)
+                                ExpressionDataModel(ANSWER, true)
                         )
                 )
 

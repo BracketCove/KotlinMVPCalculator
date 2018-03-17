@@ -1,9 +1,9 @@
 package com.wiseassblog.kotlincalculator.presenter
 
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
-import com.wiseassblog.kotlincalculator.util.BaseSchedulerProvider
+import com.wiseassblog.kotlincalculator.util.scheduler.BaseSchedulerProvider
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.viewmodel.ExpressionDataModel
+import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subscribers.DisposableSubscriber
 
@@ -37,15 +37,16 @@ class CalculatorPresenter(private var view: IViewContract.View,
     }
 
     override fun onEvaluateClick(expression: String) {
+        //Presenter is the Observer
         eventStream.add(
                 eval.execute(expression)
                         .observeOn(scheduler.getUiScheduler())
-                        .subscribeWith(object : DisposableSubscriber<ExpressionDataModel>() {
-                            override fun onNext(dataModel: ExpressionDataModel?) {
-                                if (dataModel!!.successful) {
-                                    viewModel.setDisplayState(dataModel.result)
+                        .subscribeWith(object : DisposableSubscriber<Expression>() {
+                            override fun onNext(data: Expression?) {
+                                if (data!!.successful) {
+                                    viewModel.setDisplayState(data.result)
                                 } else {
-                                    view.showError(dataModel.result)
+                                    view.showError(data.result)
                                 }
                             }
 
@@ -67,6 +68,7 @@ class CalculatorPresenter(private var view: IViewContract.View,
 
     override fun bind() {
         eventStream.add(
+                //Darel's suggestion was to make publisher
                 viewModel.getDisplayStatePublisher()
                         .subscribeWith(
                                 object : DisposableSubscriber<String>() {
