@@ -1,0 +1,78 @@
+/**
+ *Source largely taken from this OS repo: https://github.com/googlesamples/android-architecture-components/blob/master/GithubBrowserSample/versions.gradle
+ * Thank you to everyone involved in this awesome OS project!
+ *
+ * In this file, we basically build a tree of deps in a very DRY way.
+ **/
+
+//ext is a way to add extra data key/value pairs to a gradle domain object. Since it has no prefix,
+//it is short hand for project.ext in this case.
+//[:] is groovy syntax for creating a "Map" Object, which is a collection of key/value pairs
+
+//create a map of key/value pairs, called deps (deps)
+ext.deps = [:]
+
+//def means we're making a local variable. We'll use this map to build our deps key/value
+//pairs below
+def versions = [:]
+versions.lifecycle = "1.1.0"
+versions.support = "26.1.0"
+versions.junit = "4.12"
+versions.espresso = "3.0.1"
+versions.mockito = "2.13.0"
+versions.support_test = "1.0.1"
+versions.constraint_layout = "1.0.2"
+versions.android_gradle_plugin = "3.0.1"
+versions.rxjava2 = "2.1.7"
+versions.rx_android = "2.0.1"
+versions.kotlin = "1.2.30"
+
+def deps = [:]
+
+def android = [:]
+
+android.appcompat = "com.android.support:appcompat-v7:$versions.support"
+android.constraint_layout = "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
+android.lifecycle_extensions = "android.arch.lifecycle:extensions:$versions.lifecycle"
+android.lifecycle_compiler = "android.arch.lifecycle:compiler:$versions.lifecycle"
+deps.android = android
+
+def test = [:]
+
+test.junit = "junit:junit:$versions.junit"
+test.mockito = "org.mockito:mockito-core:$versions.mockito"
+test.kotlin_junit = "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
+test.test_runner = "com.android.support.test:runner:$versions.support_test"
+test.test_rules = "com.android.support.test:rules:$versions.support_test"
+deps.test = test
+
+def rx = [:]
+
+rx.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
+rx.rxandroid = "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
+deps.rx = rx
+
+def kotlin = [:]
+
+kotlin.kotlin_jre = "org.jetbrains.kotlin:kotlin-stdlib-jre8:$versions.kotlin"
+kotlin.kotlin_gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+deps.kotlin = kotlin
+
+def build_versions = [:]
+build_versions.min_sdk = 21
+build_versions.target_sdk = 26
+build_versions.build_tools = "27.0.3"
+ext.build_versions = build_versions
+
+deps.android_gradle_plugin = "com.android.tools.build:gradle:3.0.1"
+
+ext.deps = deps
+
+
+def addRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+    handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+ext.addRepos = this.&addRepos

@@ -10,6 +10,5 @@ class KotlinCalculator: Application() {
     override fun onCreate() {
         super.onCreate()
 
-
     }
 }
