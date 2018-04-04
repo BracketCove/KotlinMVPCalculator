@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.wiseassblog.kotlincalculator"
-        minSdkVersion 21
-        targetSdkVersion 26
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

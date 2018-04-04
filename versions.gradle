@@ -1,5 +1,5 @@
 /**
- *Source largely taken from this OS repo: https://github.com/googlesamples/android-architecture-components/blob/master/GithubBrowserSample/versions.gradle
+ *Source for this file largely taken from this Open Source repo: https://github.com/googlesamples/android-architecture-components/blob/master/GithubBrowserSample/versions.gradle
  * Thank you to everyone involved in this awesome OS project!
  *
  * In this file, we basically build a tree of deps in a very DRY way.
