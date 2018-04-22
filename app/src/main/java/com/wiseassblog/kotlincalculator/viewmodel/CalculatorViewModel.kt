@@ -5,7 +5,7 @@ import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
 import com.wiseassblog.kotlincalculator.view.IViewContract
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
 
 /**
  * This thing contains the state of the View, and makes it easy for the Presenter to sort out calls to the View.
@@ -15,8 +15,8 @@ import io.reactivex.subjects.PublishSubject
  */
 class CalculatorViewModel(private val data: Expression
                           = Expression.createSuccessModel(""),
-                          private val displayFlowable: PublishSubject<String>
-                          = PublishSubject.create()) : ViewModel(),
+                          private val displayFlowable: BehaviorSubject<String>
+                          = BehaviorSubject.create()) : ViewModel(),
         IViewContract.ViewModel {
     override fun getDisplayState(): String {
         return data.result
@@ -31,7 +31,7 @@ class CalculatorViewModel(private val data: Expression
      * 1. persist the UI State of the Application (obviously)
      * 2. Emit that state immediately after (as a Flowable).
      *
-     * Step 2 is achieved by a Publish Subject. Once the Presenter (Subscriber), calls
+     * Step 2 is achieved by a Behaviour Subject. Once the Presenter (Subscriber), calls
      * getDisplayStatePublisher, it is given a special kind of Subject (PublisherSubject disguised
      * as a Flowable) that can emit values when I tell it to (via onNext(getDisplayState())).
      *

@@ -57,7 +57,6 @@ class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener,
 
     companion object {
         fun newInstance(injector:Injector) = CalculatorFragment().setPresenter(injector)
-
     }
 
     private fun setPresenter(injector:Injector):Fragment{

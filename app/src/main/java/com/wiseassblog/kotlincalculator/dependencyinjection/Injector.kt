@@ -22,7 +22,6 @@ class Injector(private var activity:AppCompatActivity) {
     private var schedulerProvider: SchedulerProviderImpl = SchedulerProviderImpl
 
 
-
     fun providePresenter(view: CalculatorFragment): IViewContract.Presenter {
         return CalculatorPresenter(
                 view,
@@ -31,6 +30,4 @@ class Injector(private var activity:AppCompatActivity) {
                 EvaluateExpression(calculator, validator, schedulerProvider)
         )
     }
-
-
 }
