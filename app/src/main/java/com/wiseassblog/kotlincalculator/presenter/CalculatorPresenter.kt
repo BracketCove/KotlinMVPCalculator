@@ -1,9 +1,9 @@
 package com.wiseassblog.kotlincalculator.presenter
 
+import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.util.scheduler.BaseSchedulerProvider
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subscribers.DisposableSubscriber
 
@@ -41,23 +41,24 @@ class CalculatorPresenter(private var view: IViewContract.View,
         eventStream.add(
                 eval.execute(expression)
                         .observeOn(scheduler.getUiScheduler())
-                        .subscribeWith(object : DisposableSubscriber<Expression>() {
-                            override fun onNext(data: Expression?) {
-                                if (data!!.successful) {
-                                    viewModel.setDisplayState(data.result)
-                                } else {
-                                    view.showError(data.result)
+                        .subscribeWith(object : DisposableSubscriber<ExpressionResult<Exception, String>>() {
+                            override fun onNext(result: ExpressionResult<Exception, String>) {
+                                when (result) {
+                                    is ExpressionResult.Value -> viewModel.setDisplayState(result.value)
+                                    is ExpressionResult.Error -> view.showError(result.error.toString())
                                 }
                             }
 
                             //Reserved for fatal errors
                             override fun onError(t: Throwable?) {
-                                restartFeature()
+                               // restartFeature()
+                                t.toString()
                             }
 
                             override fun onComplete() {//huehuehuehuehuehuehuehuehue
                             }
                         })
+
         )
     }
 

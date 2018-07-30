@@ -1,7 +1,6 @@
 package com.wiseassblog.kotlincalculator.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
 import com.wiseassblog.kotlincalculator.view.IViewContract
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -13,13 +12,12 @@ import io.reactivex.subjects.BehaviorSubject
  * Shout-out to mon ami Darel Bitsy for suggestion of making the ViewModel's data into a Publisher which Presenter can subscribe to.
  * Created by R_KAY on 1/29/2018.
  */
-class CalculatorViewModel(private val data: Expression
-                          = Expression.createSuccessModel(""),
+class CalculatorViewModel(private var display: String = "",
                           private val displayFlowable: BehaviorSubject<String>
                           = BehaviorSubject.create()) : ViewModel(),
         IViewContract.ViewModel {
     override fun getDisplayState(): String {
-        return data.result
+        return display
     }
 
     override fun getDisplayStatePublisher(): Flowable<String> {
@@ -41,7 +39,7 @@ class CalculatorViewModel(private val data: Expression
      vi*
      */
     override fun setDisplayState(result: String) {
-        this.data.result = result
+        this.display = result
         displayFlowable.onNext(getDisplayState())
     }
 }

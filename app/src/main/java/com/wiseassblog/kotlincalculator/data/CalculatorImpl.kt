@@ -4,6 +4,7 @@ import android.support.annotation.VisibleForTesting
 import com.wiseassblog.kotlincalculator.data.datamodel.ExpressionDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
+import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import io.reactivex.Flowable
 import java.lang.IllegalArgumentException
@@ -12,14 +13,7 @@ import java.lang.IllegalArgumentException
  * Created by R_KAY on 12/21/2017.
  */
 object CalculatorImpl : ICalculator {
-    override fun evaluateExpression(expression: String): Flowable<ExpressionDataModel> {
-
-        return evaluate(expression)
-    }
-
-    private fun evaluate(expression: String): Flowable<ExpressionDataModel> {
-
-        //get ops and ops
+    override fun evaluateExpression(expression: String): ExpressionResult<Exception, String> {
         val operatorDataModels: MutableList<OperatorDataModel> = getOperators(expression)
         val operands: MutableList<OperandDataModel> = getOperands(expression)
 
@@ -53,8 +47,8 @@ object CalculatorImpl : ICalculator {
             }
         }
 
-        //when calculations are finished, emit the result
-        return Flowable.just(ExpressionDataModel(operands[0].value, true))
+
+        return ExpressionResult.build { operands[0].value }
     }
 
     @VisibleForTesting

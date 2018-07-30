@@ -1,10 +1,9 @@
 package com.wiseassblog.kotlincalculator.domain.usecase
 
 import com.wiseassblog.kotlincalculator.domain.BaseUseCase
-import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
+import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import com.wiseassblog.kotlincalculator.domain.repository.IValidator
-import com.wiseassblog.kotlincalculator.util.error.ValidationException
 import com.wiseassblog.kotlincalculator.util.scheduler.BaseSchedulerProvider
 import io.reactivex.Flowable
 
@@ -14,25 +13,20 @@ import io.reactivex.Flowable
  */
 class EvaluateExpression(private val calculator: ICalculator,
                          private val validator: IValidator,
-                         private val scheduler: BaseSchedulerProvider) : BaseUseCase<Expression> {
+                         private val scheduler: BaseSchedulerProvider) : BaseUseCase {
 
-    override fun execute(expression: String): Flowable<Expression> {
-        //Validator operates synchronously because having to much Rx stuff here seems to freak
-        //people out. Also, it really doesn't need to be thread.
-        if (validator.validateExpression(expression)) {
-            return calculator.evaluateExpression(expression)
-                    //Note: result is something I declare, but it's type comes from the type
-                    //which we are observing, which is ExpressionDataModel (see return type of ICalculator.kt)
-                    .flatMap { result ->
-                        Flowable.just(
-                                Expression.createSuccessModel(result.value)
-                        )
-                    }
-                    .subscribeOn(scheduler.getComputationScheduler())
+    override fun execute(expression: String): Flowable<ExpressionResult<Exception, String>> {
+        val validationResult = validator.validateExpression(expression)
+
+        return when (validationResult) {
+        //valid input, proceed to calculation
+            is ExpressionResult.Value -> Flowable.fromCallable {
+                calculator.evaluateExpression(expression)
+            }.subscribeOn(scheduler.getComputationScheduler())
+        //invalid input
+            is ExpressionResult.Error -> Flowable.just(
+                    validationResult
+            )
         }
-
-        return Flowable.just(
-                Expression.createFailureModel(ValidationException.message)
-        )
     }
 }

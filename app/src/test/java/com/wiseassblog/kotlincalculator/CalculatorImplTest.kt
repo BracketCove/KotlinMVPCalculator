@@ -35,7 +35,7 @@ class CalculatorImplTest {
     val INVALID_EXPRESSION_ONE = "2+"
     val INVALID_EXPRESSION_TWO = "+2"
     val INVALID_EXPRESSION_THREE = "2+-"
-    val INVALID_ANSWER = "Error: Invalid ExpressionDataModel"
+    val INVALID_ANSWER = "EvaluationError: Invalid ExpressionDataModel"
 
     /**
      * Get operands of current expression

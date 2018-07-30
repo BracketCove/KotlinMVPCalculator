@@ -44,7 +44,7 @@ class CalculatorPresenterTest {
     val ANSWER = "4"
 
     val INVALID_EXPRESSION = "2+Q"
-    val INVALID_ANSWER = "Error: Invalid ExpressionDataModel"
+    val INVALID_ANSWER = "EvaluationError: Invalid ExpressionDataModel"
 
 
     @Before

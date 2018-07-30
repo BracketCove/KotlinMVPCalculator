@@ -1,26 +1,30 @@
 package com.wiseassblog.kotlincalculator.data
 
+import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
 import com.wiseassblog.kotlincalculator.domain.repository.IValidator
+import com.wiseassblog.kotlincalculator.util.EvaluationError
 
 /**
  * Created by R_KAY on 1/20/2018.
  */
+const val INVALID_EXPRESSION = "Expression Invalid."
+
 object ValidatorImpl : IValidator {
-    override fun validateExpression(expression: String): Boolean {
+    override fun validateExpression(expression: String): ExpressionResult<Exception, Boolean> {
 
         //check for valid starting/ending chars
-        if (invalidStart(expression)) return false
-        if (invalidEnd(expression)) return false
+        if (invalidStart(expression)) ExpressionResult.build { Exception(INVALID_EXPRESSION) }
+        if (invalidEnd(expression)) ExpressionResult.build { Exception(INVALID_EXPRESSION) }
 
         //Check for concurrent decimals and operators like "2++2"
-        if (hasConcurrentOperators(expression)) return false
-        if (hasConcurrentDecimals(expression)) return false
+        if (hasConcurrentOperators(expression)) ExpressionResult.build { Exception(INVALID_EXPRESSION) }
+        if (hasConcurrentDecimals(expression)) ExpressionResult.build {  Exception(INVALID_EXPRESSION) }
 
-        return true
+        return ExpressionResult.build { true }
     }
 
-    private fun invalidEnd(expression: String):Boolean {
-         when {
+    private fun invalidEnd(expression: String): Boolean {
+        when {
             expression.endsWith("+") -> return true
             expression.endsWith("-") -> return true
             expression.endsWith("*") -> return true
@@ -30,7 +34,7 @@ object ValidatorImpl : IValidator {
         }
     }
 
-    private fun invalidStart(expression: String):Boolean {
+    private fun invalidStart(expression: String): Boolean {
         when {
             expression.startsWith("+") -> return true
             expression.startsWith("-") -> return true
@@ -55,7 +59,7 @@ object ValidatorImpl : IValidator {
     }
 
     private fun isConcurrentDecimal(current: Char, next: Char): Boolean {
-        if (current.toString() == "." && next.toString() ==".") {
+        if (current.toString() == "." && next.toString() == ".") {
             return true
         }
         return false
@@ -66,7 +70,7 @@ object ValidatorImpl : IValidator {
                 .forEach {
                     if (it < expression.lastIndex) {
                         if (isConcurrentOperator(expression[it], expression[it + 1])) {
-                           return true
+                            return true
                         }
                     }
                 }
