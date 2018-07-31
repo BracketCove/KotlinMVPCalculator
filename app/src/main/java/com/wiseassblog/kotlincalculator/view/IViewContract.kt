@@ -1,6 +1,7 @@
 package com.wiseassblog.kotlincalculator.view
 
-import io.reactivex.Flowable
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 
 /**
  * Created by R_KAY on 10/8/2017.
@@ -19,7 +20,7 @@ interface IViewContract {
 
         //Get something (Flowable in this case)
         // which will emit a CalcUIModel as soon as it is set (above method)
-       fun getDisplayStatePublisher(): Flowable<String>
+       fun setObserver(obs: Observer<String>)
 
         fun getDisplayState():String
     }

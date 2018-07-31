@@ -1,23 +1,33 @@
 package com.wiseassblog.kotlincalculator.presenter
 
+import android.arch.lifecycle.Observer
 import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
-import com.wiseassblog.kotlincalculator.util.scheduler.BaseSchedulerProvider
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subscribers.DisposableSubscriber
+import kotlinx.coroutines.experimental.CoroutineStart
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 /**
  * Created by R_KAY on 12/20/2017.
  */
 class CalculatorPresenter(private var view: IViewContract.View,
                           private var viewModel: IViewContract.ViewModel,
-                          private val scheduler: BaseSchedulerProvider,
-                          private val eval: EvaluateExpression) : IViewContract.Presenter {
-
-    private val eventStream = CompositeDisposable()
+                          private val eval: EvaluateExpression) :
+        IViewContract.Presenter, Observer<String> {
+    override fun onChanged(t: String?) {
+        view.setDisplay(t ?: "")
+    }
 
     private val EMPTY = ""
+
+    /*jobTracker works like a CompositeDisposable
+    *
+    * Essentially, I use it as a container for all other executed coroutines, which allows me
+    * to cancel them all at once.
+    * */
+    private val jobTracker = Job()
 
     //Update the state, then the view.
     override fun onLongDeleteClick() {
@@ -37,59 +47,32 @@ class CalculatorPresenter(private var view: IViewContract.View,
     }
 
     override fun onEvaluateClick(expression: String) {
-        //Presenter is the Observer
-        eventStream.add(
-                eval.execute(expression)
-                        .observeOn(scheduler.getUiScheduler())
-                        .subscribeWith(object : DisposableSubscriber<ExpressionResult<Exception, String>>() {
-                            override fun onNext(result: ExpressionResult<Exception, String>) {
-                                when (result) {
-                                    is ExpressionResult.Value -> viewModel.setDisplayState(result.value)
-                                    is ExpressionResult.Error -> view.showError(result.error.toString())
-                                }
-                            }
-
-                            //Reserved for fatal errors
-                            override fun onError(t: Throwable?) {
-                               // restartFeature()
-                                t.toString()
-                            }
-
-                            override fun onComplete() {//huehuehuehuehuehuehuehuehue
-                            }
-                        })
-
-        )
+        evaluateExpression(expression)
     }
 
-    private fun restartFeature() {
-        eventStream.clear()
-        view.restartFeature()
+    private fun evaluateExpression(expression: String) = launch(jobTracker) {
+        val result = eval.execute(expression)
+
+        when (result) {
+            is ExpressionResult.Value -> {
+                updateViewModel(result.value)
+            }
+            is ExpressionResult.Error -> {
+                view.showError(result.error.message.toString())
+            }
+        }
+    }
+
+    private fun updateViewModel(value: String) = launch(UI, CoroutineStart.DEFAULT, jobTracker) {
+        viewModel.setDisplayState(value)
     }
 
     override fun bind() {
-        eventStream.add(
-                //Darel's suggestion was to make publisher
-                viewModel.getDisplayStatePublisher()
-                        .subscribeWith(
-                                object : DisposableSubscriber<String>() {
-                                    override fun onNext(displayState: String) {
-                                        view.setDisplay(displayState)
-                                    }
-
-                                    override fun onError(t: Throwable?) {
-                                        restartFeature()
-                                    }
-
-                                    override fun onComplete() {}
-                                }
-                        )
-        )
-        //  view.setDisplay(viewModel.getDisplayStateFlowable())
+        viewModel.setObserver(this)
     }
 
     override fun clear() {
-        eventStream.clear()
+        jobTracker.cancel()
     }
 
 }

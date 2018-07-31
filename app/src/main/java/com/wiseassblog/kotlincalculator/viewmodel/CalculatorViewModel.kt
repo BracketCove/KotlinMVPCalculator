@@ -1,10 +1,10 @@
 package com.wiseassblog.kotlincalculator.viewmodel
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.subjects.BehaviorSubject
 
 /**
  * This thing contains the state of the View, and makes it easy for the Presenter to sort out calls to the View.
@@ -12,35 +12,21 @@ import io.reactivex.subjects.BehaviorSubject
  * Shout-out to mon ami Darel Bitsy for suggestion of making the ViewModel's data into a Publisher which Presenter can subscribe to.
  * Created by R_KAY on 1/29/2018.
  */
-class CalculatorViewModel(private var display: String = "",
-                          private val displayFlowable: BehaviorSubject<String>
-                          = BehaviorSubject.create()) : ViewModel(),
+class CalculatorViewModel(private var displayState:MutableLiveData<String> = MutableLiveData() ) : ViewModel(),
         IViewContract.ViewModel {
     override fun getDisplayState(): String {
-        return display
+        //return current display state or empty string if value is null
+        //see "Elvis Operator"
+        return displayState.value ?: ""
     }
 
-    override fun getDisplayStatePublisher(): Flowable<String> {
-        return displayFlowable.toFlowable(BackpressureStrategy.LATEST)
+    //Observer is another word for Subject.
+    override fun setObserver(obs: Observer<String>) {
+        displayState.observeForever(obs)
     }
 
-    /**
-     * This method must do two things:
-     * 1. persist the UI State of the Application (obviously)
-     * 2. Emit that state immediately after (as a Flowable).
-     *
-     * Step 2 is achieved by a Behaviour Subject. Once the Presenter (Subscriber), calls
-     * getDisplayStatePublisher, it is given a special kind of Subject (PublisherSubject disguised
-     * as a Flowable) that can emit values when I tell it to (via onNext(getDisplayState())).
-     *
-     * Step 2 in simpler language: When we give data to the ViewModel, we want the ViewModel to give
-     * a copy of that new data to the Presenter instantly. This is better than having the Presenter
-     * constantly ask it for the value.
-     vi*
-     */
     override fun setDisplayState(result: String) {
-        this.display = result
-        displayFlowable.onNext(getDisplayState())
+        displayState.value = result
     }
 }
 

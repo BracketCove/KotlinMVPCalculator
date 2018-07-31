@@ -33,6 +33,7 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+
 }
 
 dependencies {
@@ -40,6 +41,8 @@ dependencies {
     implementation deps.android.constraint_layout
     implementation deps.android.lifecycle_extensions
     implementation deps.kotlin.kotlin_jre
+    implementation deps.kotlin.coroutines_core
+    implementation deps.kotlin.coroutines_android
     kapt deps.android.lifecycle_compiler
 
     testImplementation deps.test.junit
@@ -48,7 +51,5 @@ dependencies {
     testImplementation deps.test.test_runner
     testImplementation deps.test.test_rules
 
-    implementation deps.rx.rxjava2
-    implementation deps.rx.rxandroid
 }
 

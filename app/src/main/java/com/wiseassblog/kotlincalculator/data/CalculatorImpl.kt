@@ -1,19 +1,17 @@
 package com.wiseassblog.kotlincalculator.data
 
 import android.support.annotation.VisibleForTesting
-import com.wiseassblog.kotlincalculator.data.datamodel.ExpressionDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
 import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
-import io.reactivex.Flowable
 import java.lang.IllegalArgumentException
 
 /**
  * Created by R_KAY on 12/21/2017.
  */
 object CalculatorImpl : ICalculator {
-    override fun evaluateExpression(expression: String): ExpressionResult<Exception, String> {
+    override suspend fun evaluateExpression(expression: String): ExpressionResult<Exception, String> {
         val operatorDataModels: MutableList<OperatorDataModel> = getOperators(expression)
         val operands: MutableList<OperandDataModel> = getOperands(expression)
 
