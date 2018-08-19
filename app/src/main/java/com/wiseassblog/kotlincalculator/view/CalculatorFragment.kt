@@ -106,7 +106,7 @@ class CalculatorFragment : Fragment(), IViewContract.View, View.OnClickListener,
     }
 
     override fun setDisplay(value: String) {
-        lbl_display.text = value
+        lbl_display?.text = value
     }
 
     override fun showError(value: String) {

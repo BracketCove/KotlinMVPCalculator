@@ -3,7 +3,7 @@ package com.wiseassblog.kotlincalculator.data
 import android.support.annotation.VisibleForTesting
 import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
-import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import java.lang.IllegalArgumentException
 
@@ -11,7 +11,7 @@ import java.lang.IllegalArgumentException
  * Created by R_KAY on 12/21/2017.
  */
 object CalculatorImpl : ICalculator {
-    override suspend fun evaluateExpression(expression: String): ExpressionResult<Exception, String> {
+    override suspend fun evaluateExpression(expression: String): EvaluationResult<Exception, String> {
         val operatorDataModels: MutableList<OperatorDataModel> = getOperators(expression)
         val operands: MutableList<OperandDataModel> = getOperands(expression)
 
@@ -46,7 +46,7 @@ object CalculatorImpl : ICalculator {
         }
 
 
-        return ExpressionResult.build { operands[0].value }
+        return EvaluationResult.buildValue { operands[0].value }
     }
 
     @VisibleForTesting

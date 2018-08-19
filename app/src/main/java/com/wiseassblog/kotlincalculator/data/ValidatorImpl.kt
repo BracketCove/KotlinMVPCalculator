@@ -1,26 +1,25 @@
 package com.wiseassblog.kotlincalculator.data
 
-import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.domain.repository.IValidator
 import com.wiseassblog.kotlincalculator.util.EvaluationError
 
 /**
  * Created by R_KAY on 1/20/2018.
  */
-const val INVALID_EXPRESSION = "Expression Invalid."
 
 object ValidatorImpl : IValidator {
-    override fun validateExpression(expression: String): ExpressionResult<Exception, Boolean> {
+    override fun validateExpression(expression: String): EvaluationResult<Exception, Boolean> {
 
         //check for valid starting/ending chars
-        if (invalidStart(expression)) ExpressionResult.build { false }
-        if (invalidEnd(expression)) ExpressionResult.build { false }
+        if (invalidStart(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
+        if (invalidEnd(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
 
         //Check for concurrent decimals and operators like "2++2"
-        if (hasConcurrentOperators(expression)) ExpressionResult.build { false }
-        if (hasConcurrentDecimals(expression)) ExpressionResult.build { false }
+        if (hasConcurrentOperators(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
+        if (hasConcurrentDecimals(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
 
-        return ExpressionResult.build { true }
+        return EvaluationResult.buildValue { true }
     }
 
     private fun invalidEnd(expression: String): Boolean {

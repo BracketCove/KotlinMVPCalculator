@@ -1,12 +1,13 @@
 package com.wiseassblog.kotlincalculator.presenter
 
 import android.arch.lifecycle.Observer
-import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.view.IViewContract
 import kotlinx.coroutines.experimental.CoroutineStart
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.cancelAndJoin
 import kotlinx.coroutines.experimental.launch
 
 /**
@@ -54,17 +55,21 @@ class CalculatorPresenter(private var view: IViewContract.View,
         val result = eval.execute(expression)
 
         when (result) {
-            is ExpressionResult.Value -> {
+            is EvaluationResult.Value -> {
                 updateViewModel(result.value)
             }
-            is ExpressionResult.Error -> {
-                view.showError(result.error.message.toString())
+            is EvaluationResult.Error -> {
+                showError(result.error.message.toString())
             }
         }
     }
 
     private fun updateViewModel(value: String) = launch(UI, CoroutineStart.DEFAULT, jobTracker) {
         viewModel.setDisplayState(value)
+    }
+
+    private fun showError(error: String) = launch(UI, CoroutineStart.DEFAULT, jobTracker) {
+        view.showError(error)
     }
 
     override fun bind() {

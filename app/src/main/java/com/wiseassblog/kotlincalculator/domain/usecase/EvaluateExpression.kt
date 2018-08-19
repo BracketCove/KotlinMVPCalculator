@@ -1,10 +1,10 @@
 package com.wiseassblog.kotlincalculator.domain.usecase
 
-import com.wiseassblog.kotlincalculator.data.INVALID_EXPRESSION
 import com.wiseassblog.kotlincalculator.domain.BaseUseCase
-import com.wiseassblog.kotlincalculator.domain.domainmodel.ExpressionResult
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import com.wiseassblog.kotlincalculator.domain.repository.IValidator
+import com.wiseassblog.kotlincalculator.util.EvaluationError
 
 
 /**
@@ -13,29 +13,23 @@ import com.wiseassblog.kotlincalculator.domain.repository.IValidator
 class EvaluateExpression(private val calculator: ICalculator,
                          private val validator: IValidator) : BaseUseCase {
 
-    override suspend fun execute(expression: String): ExpressionResult<Exception, String> {
+    override suspend fun execute(expression: String): EvaluationResult<Exception, String> {
+
 
         val validationResult = validator.validateExpression(expression)
 
-        return when (validationResult) {
-            is ExpressionResult.Value ->
-                //expression was valid, send to calculator
-                calculator.evaluateExpression(expression)
-                //expression invalid
-            is ExpressionResult.Error -> ExpressionResult.build {
-                throw Exception(INVALID_EXPRESSION)
+        when (validationResult) {
+            is EvaluationResult.Value -> {
+                val evaluationResult = calculator.evaluateExpression(expression)
+                if (evaluationResult is EvaluationResult.Value) {
+                    return EvaluationResult.buildValue { evaluationResult.value }
+                } else {
+                    return EvaluationResult.buildError(EvaluationError.CalculationError())
+                }
             }
+
+            is EvaluationResult.Error -> return EvaluationResult.buildError(validationResult.error)
         }
-//
-//        return when (validationResult) {
-//        //valid input, proceed to calculation
-//            is ExpressionResult.Value -> Flowable.fromCallable {
-//                calculator.evaluateExpression(expression)
-//            }.subscribeOn(scheduler.getComputationScheduler())
-//        //invalid input
-//            is ExpressionResult.Error -> Flowable.just(
-//                    validationResult
-//            )
-//        }
+
     }
 }
