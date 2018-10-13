@@ -6,6 +6,7 @@ import com.wiseassblog.kotlincalculator.data.CalculatorImpl
 import com.wiseassblog.kotlincalculator.data.ValidatorImpl
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
+import com.wiseassblog.kotlincalculator.util.DispatcherProvider
 import com.wiseassblog.kotlincalculator.view.CalculatorFragment
 import com.wiseassblog.kotlincalculator.view.IViewContract
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
@@ -24,7 +25,8 @@ class Injector(private var activity:AppCompatActivity) {
         return CalculatorPresenter(
                 view,
                 ViewModelProviders.of(activity).get(CalculatorViewModel::class.java),
-                EvaluateExpression(calculator, validator)
+                EvaluateExpression(calculator, validator),
+                DispatcherProvider
         )
     }
 }

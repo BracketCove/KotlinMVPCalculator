@@ -2,11 +2,10 @@ package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.data.ValidatorImpl
 import com.wiseassblog.kotlincalculator.data.datamodel.ExpressionDataModel
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
-import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
-import io.reactivex.Flowable
-import io.reactivex.subscribers.TestSubscriber
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -33,32 +32,34 @@ class EvaluateExpressionModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        useCase = EvaluateExpression(calc, validator, TestScheduler())
+        useCase = EvaluateExpression(calc, validator)
     }
 
     @Test
-    fun onUseCaseExecuted() {
-        val subscriber = TestSubscriber<Expression>()
+    fun onUseCaseExecuted() = runBlocking {
 
         Mockito.`when`(validator.validateExpression(EXPRESSION))
                 .thenReturn(
-                        true
+                        EvaluationResult.build { true }
                 )
 
         Mockito.`when`(calc.evaluateExpression(EXPRESSION))
                 .thenReturn(
-                        Flowable.just(
-                                ExpressionDataModel(ANSWER, true)
-                        )
+                        EvaluationResult.build { ANSWER }
                 )
 
-        useCase.execute(EXPRESSION).subscribeWith(subscriber)
+        val result = useCase.execute(EXPRESSION)
+
 
         Mockito.verify(validator).validateExpression(EXPRESSION)
         Mockito.verify(calc).evaluateExpression(EXPRESSION)
 
-        assertTrue(subscriber.values()[0].result == ANSWER)
-        assertTrue(subscriber.values()[0].successful)
+        if (result is EvaluationResult.Value){
+            assertTrue { result.value == ANSWER }
+        } else {
+            //fail
+            assertTrue { false }
+        }
     }
 
 }

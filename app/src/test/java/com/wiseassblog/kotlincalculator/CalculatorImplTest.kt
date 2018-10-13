@@ -1,10 +1,10 @@
 package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.data.CalculatorImpl
-import com.wiseassblog.kotlincalculator.data.datamodel.ExpressionDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
-import io.reactivex.subscribers.TestSubscriber
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
 import kotlin.test.assertTrue
 
@@ -55,23 +55,27 @@ class CalculatorImplTest {
     }
 
     @Test
-    fun onEvaluateValidSimpleExpression() {
-        val subscriber = TestSubscriber<ExpressionDataModel>()
+    fun onEvaluateValidSimpleExpression() = runBlocking {
 
-        calc.evaluateExpression(SIMPLE_EXPRESSION).subscribeWith(subscriber)
+        val result = calc.evaluateExpression(SIMPLE_EXPRESSION)
 
-        assertTrue(subscriber.values()[0].value == SIMPLE_ANSWER)
+        if (result is EvaluationResult.Value) assertTrue(result.value == SIMPLE_ANSWER)
+
+        else assertTrue { false }
     }
-//
+
+    //
     @Test
-    fun onEvaluateValidComplexExpression() {
-        val subscriber = TestSubscriber<ExpressionDataModel>()
+    fun onEvaluateValidComplexExpression() = runBlocking {
 
-        calc.evaluateExpression(COMPLEX_EXPRESSION).subscribeWith(subscriber)
+        val result = calc.evaluateExpression(COMPLEX_EXPRESSION)
 
-    assertTrue(subscriber.values()[0].value == COMPLEX_ANSWER)
-}
-    
+        if (result is EvaluationResult.Value) assertTrue(result.value == COMPLEX_ANSWER)
+
+        else assertTrue { false }
+
+    }
+
 }
 
 

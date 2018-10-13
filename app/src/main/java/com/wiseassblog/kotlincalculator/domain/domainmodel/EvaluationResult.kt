@@ -1,5 +1,6 @@
 package com.wiseassblog.kotlincalculator.domain.domainmodel
 
+import com.wiseassblog.kotlincalculator.util.EvaluationError
 import java.lang.Exception
 
 /**
@@ -21,15 +22,19 @@ sealed class EvaluationResult<out E, out V> {
 
     //two specified sub-types
     data class Value<out V>(val value: V) : EvaluationResult<Nothing, V>()
+
     data class Error<out E>(val error: E) : EvaluationResult<E, Nothing>()
 
-    companion object Factory{
-        inline fun <V> buildValue(function: () -> V): EvaluationResult<Nothing, V> {
-            return Value(function.invoke())
-        }
+//    fun <V> value(value: V): EvaluationResult<Nothing, V> = Value(value)
+//    fun <E> error(msg: E): EvaluationResult<E, Nothing> = Error(msg)
 
-        inline fun buildError(error: Exception): EvaluationResult<Exception, Nothing> {
-            return Error(error)
-        }
+    companion object {
+        inline fun <V> build(function: () -> V): EvaluationResult<Exception, V> =
+                try {
+                    Value(function.invoke())
+                } catch (e: Exception) {
+                    Error(e)
+                }
     }
+
 }

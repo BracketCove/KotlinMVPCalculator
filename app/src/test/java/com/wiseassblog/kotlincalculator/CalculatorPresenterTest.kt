@@ -1,11 +1,15 @@
 package com.wiseassblog.kotlincalculator
 
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
 import com.wiseassblog.kotlincalculator.presenter.CalculatorPresenter
+import com.wiseassblog.kotlincalculator.util.DispatcherProvider
+import com.wiseassblog.kotlincalculator.util.EvaluationError
+import com.wiseassblog.kotlincalculator.util.VALIDATION_ERROR
 import com.wiseassblog.kotlincalculator.view.IViewContract
-import com.wiseassblog.kotlincalculator.domain.domainmodel.Expression
 import com.wiseassblog.kotlincalculator.viewmodel.CalculatorViewModel
-import io.reactivex.Flowable
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -23,12 +27,13 @@ import org.mockito.MockitoAnnotations
  */
 class CalculatorPresenterTest {
 
-    private lateinit var scheduler: TestScheduler
-
     private lateinit var presenter: CalculatorPresenter
 
     @Mock
     private lateinit var view: IViewContract.View
+
+    @Mock
+    private lateinit var dispatcher: DispatcherProvider
 
     @Mock
     private lateinit var viewModel: CalculatorViewModel
@@ -44,16 +49,21 @@ class CalculatorPresenterTest {
     val ANSWER = "4"
 
     val INVALID_EXPRESSION = "2+Q"
-    val INVALID_ANSWER = "EvaluationError: Invalid ExpressionDataModel"
+
+
 
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        scheduler = TestScheduler()
+        presenter = CalculatorPresenter(view, viewModel, eval, dispatcher)
+        presenter.bind()
 
-        presenter = CalculatorPresenter(view, viewModel, scheduler, eval)
+        Mockito.`when`(dispatcher.provideUIContext())
+                .thenReturn(
+                        Dispatchers.Unconfined
+                )
     }
 
     /**
@@ -61,21 +71,11 @@ class CalculatorPresenterTest {
      * of the input as a String.
      */
     @Test
-    fun onEvaluateValidSimpleExpression() {
-        val result = Expression.createSuccessModel(ANSWER)
+    fun onEvaluateValidSimpleExpression() = runBlocking {
 
         Mockito.`when`(eval.execute(EXPRESSION))
                 .thenReturn(
-                        Flowable.just(
-                                result
-                        )
-                )
-
-        Mockito.`when`(eval.execute(EXPRESSION))
-                .thenReturn(
-                        Flowable.just(
-                                result
-                        )
+                        EvaluationResult.build { ANSWER }
                 )
 
        //this is the "Unit" what we are testing
@@ -87,35 +87,16 @@ class CalculatorPresenterTest {
     }
 
     @Test
-    fun onEvaluateInvalidExpression() {
+    fun onEvaluateInvalidExpression() = runBlocking {
         Mockito.`when`(eval.execute(INVALID_EXPRESSION))
                 //...do this
                 .thenReturn(
-                        Flowable.just(
-                                Expression.createFailureModel(INVALID_ANSWER)
-                        )
+EvaluationResult.build { throw EvaluationError.ValidationError() }
                 )
 
         presenter.onEvaluateClick(INVALID_EXPRESSION)
 
         Mockito.verify(eval).execute(INVALID_EXPRESSION)
-        Mockito.verify(view).showError(INVALID_ANSWER)
+        Mockito.verify(view).showError(VALIDATION_ERROR)
     }
-
-    @Test
-    fun onEvaluateFatalError() {
-        Mockito.`when`(eval.execute(INVALID_EXPRESSION))
-                //...do this
-                .thenReturn(
-                        Flowable.error(Exception(INVALID_ANSWER))
-                )
-
-
-        presenter.onEvaluateClick(INVALID_EXPRESSION)
-
-        Mockito.verify(eval).execute(INVALID_EXPRESSION)
-        Mockito.verify(view).restartFeature()
-    }
-
-
 }

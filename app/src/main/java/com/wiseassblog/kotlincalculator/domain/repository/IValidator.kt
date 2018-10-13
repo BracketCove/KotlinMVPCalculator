@@ -1,6 +1,7 @@
 package com.wiseassblog.kotlincalculator.domain.repository
 
 import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
+import com.wiseassblog.kotlincalculator.util.EvaluationError
 
 /**
  * Created by R_KAY on 1/20/2018.

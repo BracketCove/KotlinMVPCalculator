@@ -1,6 +1,8 @@
 package com.wiseassblog.kotlincalculator
 
 import com.wiseassblog.kotlincalculator.data.ValidatorImpl
+import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
+import com.wiseassblog.kotlincalculator.util.VALIDATION_ERROR
 import org.junit.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -27,51 +29,60 @@ class ValidatorImplTest {
 
         //all we're saying here is: assert that validator returns true when given a valid simple
         //expression
-        assertTrue(validator.validateExpression(SIMPLE_EXPRESSION))
+        val result = validator.validateExpression(SIMPLE_EXPRESSION)
+
+        if (result is EvaluationResult.Value) assertTrue(result.value)
+        else assertTrue { false }
+
 
     }
 
     @Test
     fun validExpressionTestTwo(){
+        val result = validator.validateExpression(COMPLEX_EXPRESSION)
 
-        assertTrue(validator.validateExpression(COMPLEX_EXPRESSION))
-
+        if (result is EvaluationResult.Value) assertTrue(result.value)
     }
 
     @Test
     fun invalidExpressionTestOne(){
 
-       assertFalse(validator.validateExpression(INVALID_EXPRESSION_ONE))
+        val result = validator.validateExpression(INVALID_EXPRESSION_ONE)
 
+        if (result is EvaluationResult.Error) assertTrue(result.error.message == VALIDATION_ERROR)
     }
 
     @Test
     fun invalidExpressionTestTwo(){
 
-        assertFalse(validator.validateExpression(INVALID_EXPRESSION_TWO))
+        val result = validator.validateExpression(INVALID_EXPRESSION_TWO)
 
+        if (result is EvaluationResult.Error) assertTrue(result.error.message == VALIDATION_ERROR)
     }
 
     @Test
     fun invalidExpressionTestThree(){
 
-        assertFalse(validator.validateExpression(INVALID_EXPRESSION_THREE))
+        val result = validator.validateExpression(INVALID_EXPRESSION_THREE)
 
+        if (result is EvaluationResult.Error) assertTrue(result.error.message == VALIDATION_ERROR)
     }
 
     @Test
     fun invalidExpressionTestFour(){
 
-        assertFalse(validator.validateExpression(INVALID_EXPRESSION_FOUR))
+        val result = validator.validateExpression(INVALID_EXPRESSION_FOUR)
+
+        if (result is EvaluationResult.Error) assertTrue(result.error.message == VALIDATION_ERROR)
 
     }
 
     @Test
     fun invalidExpressionTestFive(){
 
-        assertFalse(validator.validateExpression(INVALID_EXPRESSION_FIVE))
+        val result = validator.validateExpression(INVALID_EXPRESSION_FIVE)
+
+        if (result is EvaluationResult.Error) assertTrue(result.error.message == VALIDATION_ERROR)
 
     }
-
-
 }

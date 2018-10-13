@@ -12,14 +12,14 @@ object ValidatorImpl : IValidator {
     override fun validateExpression(expression: String): EvaluationResult<Exception, Boolean> {
 
         //check for valid starting/ending chars
-        if (invalidStart(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
-        if (invalidEnd(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
+        if (invalidStart(expression)) return EvaluationResult.build { throw EvaluationError.ValidationError() }
+        if (invalidEnd(expression)) return EvaluationResult.build { throw EvaluationError.ValidationError() }
 
         //Check for concurrent decimals and operators like "2++2"
-        if (hasConcurrentOperators(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
-        if (hasConcurrentDecimals(expression)) return EvaluationResult.buildError(EvaluationError.ValidationError())
+        if (hasConcurrentOperators(expression)) EvaluationResult.build { throw EvaluationError.ValidationError() }
+        if (hasConcurrentDecimals(expression)) EvaluationResult.build { throw EvaluationError.ValidationError() }
 
-        return EvaluationResult.buildValue { true }
+        return EvaluationResult.build { true }
     }
 
     private fun invalidEnd(expression: String): Boolean {

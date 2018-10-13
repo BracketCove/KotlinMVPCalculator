@@ -9,7 +9,7 @@ package com.wiseassblog.kotlincalculator.util
 const val VALIDATION_ERROR = "Invalid Expression."
 const val COMPUTATION_ERROR = "Computation Failed."
 
-open class EvaluationError(message: String? = null) : Exception(message) {
+sealed class EvaluationError(message: String? = null): Exception(message) {
     class ValidationError: EvaluationError(VALIDATION_ERROR)
     class CalculationError: EvaluationError(COMPUTATION_ERROR)
 }

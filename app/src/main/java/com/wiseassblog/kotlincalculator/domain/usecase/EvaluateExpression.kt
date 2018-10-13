@@ -11,7 +11,7 @@ import com.wiseassblog.kotlincalculator.util.EvaluationError
  * Created by R_KAY on 12/20/2017.
  */
 class EvaluateExpression(private val calculator: ICalculator,
-                         private val validator: IValidator) : BaseUseCase {
+                         private val validator: IValidator) : BaseUseCase<Exception, String> {
 
     override suspend fun execute(expression: String): EvaluationResult<Exception, String> {
 
@@ -20,15 +20,10 @@ class EvaluateExpression(private val calculator: ICalculator,
 
         when (validationResult) {
             is EvaluationResult.Value -> {
-                val evaluationResult = calculator.evaluateExpression(expression)
-                if (evaluationResult is EvaluationResult.Value) {
-                    return EvaluationResult.buildValue { evaluationResult.value }
-                } else {
-                    return EvaluationResult.buildError(EvaluationError.CalculationError())
-                }
+                return calculator.evaluateExpression(expression)
             }
 
-            is EvaluationResult.Error -> return EvaluationResult.buildError(validationResult.error)
+            is EvaluationResult.Error -> return validationResult
         }
 
     }

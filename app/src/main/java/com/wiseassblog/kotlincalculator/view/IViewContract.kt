@@ -16,17 +16,15 @@ interface IViewContract {
     }
 
     interface ViewModel {
-       fun setDisplayState(result: String)
+        fun setDisplayState(result: String)
 
-        //Get something (Flowable in this case)
-        // which will emit a CalcUIModel as soon as it is set (above method)
-       fun setObserver(obs: Observer<String>)
+        fun setObserver(obs: Observer<String>)
 
-        fun getDisplayState():String
+        fun getDisplayState(): String
     }
 
     interface Presenter {
-        fun onEvaluateClick(expression:String)
+        fun onEvaluateClick(expression: String)
         fun onInputButtonClick(value: String)
         fun onDeleteClick()
         fun onLongDeleteClick()

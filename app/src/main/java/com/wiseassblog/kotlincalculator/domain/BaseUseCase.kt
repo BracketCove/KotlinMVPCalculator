@@ -7,7 +7,7 @@ import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
  *
  * Created by R_KAY on 12/20/2017.
  */
-interface BaseUseCase {
-   suspend fun execute(expression: String): EvaluationResult<Exception, String>
+interface BaseUseCase<E, V> {
+   suspend fun execute(expression: String): EvaluationResult<E, V>
 }
 

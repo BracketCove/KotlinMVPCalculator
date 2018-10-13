@@ -5,6 +5,7 @@ import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
 import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
+import com.wiseassblog.kotlincalculator.util.EvaluationError
 import java.lang.IllegalArgumentException
 
 /**
@@ -46,7 +47,7 @@ object CalculatorImpl : ICalculator {
         }
 
 
-        return EvaluationResult.buildValue { operands[0].value }
+        return EvaluationResult.build { operands[0].value }
     }
 
     @VisibleForTesting
