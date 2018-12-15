@@ -4,12 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion build_versions.target_sdk
 
     defaultConfig {
         applicationId "com.wiseassblog.kotlincalculator"
-        minSdkVersion 21
-        targetSdkVersion 26
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -40,17 +40,13 @@ dependencies {
     implementation deps.android.appcompat
     implementation deps.android.constraint_layout
     implementation deps.android.lifecycle_extensions
-    implementation deps.kotlin.kotlin_jre
     implementation deps.kotlin.coroutines_core
     implementation deps.kotlin.coroutines_android
-    kapt deps.android.lifecycle_compiler
+    implementation deps.kotlin.kotlin_jre
 
     testImplementation deps.test.junit
-    testImplementation deps.test.mockito
+    testImplementation deps.test.mockk
     testImplementation deps.test.kotlin_junit
-    testImplementation deps.test.test_runner
-    testImplementation deps.test.test_rules
-    testImplementation deps.test.aac_test_rules
 
 }
 

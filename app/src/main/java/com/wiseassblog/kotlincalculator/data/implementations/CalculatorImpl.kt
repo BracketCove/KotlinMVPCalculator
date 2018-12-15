@@ -1,18 +1,17 @@
-package com.wiseassblog.kotlincalculator.data
+package com.wiseassblog.kotlincalculator.data.implementations
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
 import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
-import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
-import com.wiseassblog.kotlincalculator.util.EvaluationError
-import java.lang.IllegalArgumentException
 
 /**
+ * No interface necessary since I'll only ever write my own Calculator/Validator for
+ * this project.
  * Created by R_KAY on 12/21/2017.
  */
-object CalculatorImpl : ICalculator {
-    override suspend fun evaluateExpression(expression: String): EvaluationResult<Exception, String> {
+object CalculatorImpl {
+    suspend fun evaluateExpression(expression: String): EvaluationResult<Exception, String> {
         val operatorDataModels: MutableList<OperatorDataModel> = getOperators(expression)
         val operands: MutableList<OperandDataModel> = getOperands(expression)
 

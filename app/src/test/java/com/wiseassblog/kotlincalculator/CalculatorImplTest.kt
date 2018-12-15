@@ -1,10 +1,10 @@
 package com.wiseassblog.kotlincalculator
 
-import com.wiseassblog.kotlincalculator.data.CalculatorImpl
 import com.wiseassblog.kotlincalculator.data.datamodel.OperandDataModel
 import com.wiseassblog.kotlincalculator.data.datamodel.OperatorDataModel
+import com.wiseassblog.kotlincalculator.data.implementations.CalculatorImpl
 import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.test.assertTrue
 
@@ -60,7 +60,6 @@ class CalculatorImplTest {
         val result = calc.evaluateExpression(SIMPLE_EXPRESSION)
 
         if (result is EvaluationResult.Value) assertTrue(result.value == SIMPLE_ANSWER)
-
         else assertTrue { false }
     }
 
@@ -71,7 +70,6 @@ class CalculatorImplTest {
         val result = calc.evaluateExpression(COMPLEX_EXPRESSION)
 
         if (result is EvaluationResult.Value) assertTrue(result.value == COMPLEX_ANSWER)
-
         else assertTrue { false }
 
     }

@@ -1,11 +1,11 @@
 package com.wiseassblog.kotlincalculator
 
-import com.wiseassblog.kotlincalculator.data.ValidatorImpl
+import com.wiseassblog.kotlincalculator.data.implementations.ValidatorImpl
 import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
 import com.wiseassblog.kotlincalculator.util.VALIDATION_ERROR
-import org.junit.Test
-import kotlin.test.assertFalse
+import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
+
 
 /**
  * Created by R_KAY on 1/20/2018.
@@ -33,8 +33,6 @@ class ValidatorImplTest {
 
         if (result is EvaluationResult.Value) assertTrue(result.value)
         else assertTrue { false }
-
-
     }
 
     @Test

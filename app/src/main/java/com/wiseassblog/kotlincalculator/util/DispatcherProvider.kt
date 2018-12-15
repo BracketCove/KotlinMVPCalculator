@@ -1,7 +1,8 @@
 package com.wiseassblog.kotlincalculator.util
 
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.CoroutineContext
+
 
 object DispatcherProvider {
     fun provideUIContext(): CoroutineContext {

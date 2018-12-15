@@ -1,8 +1,8 @@
 package com.wiseassblog.kotlincalculator.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.wiseassblog.kotlincalculator.view.IViewContract
 
 /**
@@ -11,7 +11,7 @@ import com.wiseassblog.kotlincalculator.view.IViewContract
  * Shout-out to mon ami Darel Bitsy for suggestion of making the ViewModel's data into a Publisher which Presenter can subscribe to.
  * Created by R_KAY on 1/29/2018.
  */
-class CalculatorViewModel(private var displayState:MutableLiveData<String> = MutableLiveData() ) : ViewModel(),
+class CalculatorViewModel(private var displayState: MutableLiveData<String> = MutableLiveData()) : ViewModel(),
         IViewContract.ViewModel {
     override fun getDisplayState(): String {
         //return current display state or empty string if value is null

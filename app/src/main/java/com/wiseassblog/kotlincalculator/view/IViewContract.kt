@@ -1,7 +1,6 @@
 package com.wiseassblog.kotlincalculator.view
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 
 /**
  * Created by R_KAY on 10/8/2017.

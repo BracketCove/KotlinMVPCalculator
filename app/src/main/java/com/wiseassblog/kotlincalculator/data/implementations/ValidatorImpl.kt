@@ -1,15 +1,15 @@
-package com.wiseassblog.kotlincalculator.data
+package com.wiseassblog.kotlincalculator.data.implementations
 
 import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
-import com.wiseassblog.kotlincalculator.domain.repository.IValidator
 import com.wiseassblog.kotlincalculator.util.EvaluationError
 
 /**
- * Created by R_KAY on 1/20/2018.
+ * No interface necessary since I'll only ever write my own Calculator/Validator for
+ * this project.
+ * Created by R_KAY on 12/21/2017.
  */
-
-object ValidatorImpl : IValidator {
-    override fun validateExpression(expression: String): EvaluationResult<Exception, Boolean> {
+object ValidatorImpl {
+    fun validateExpression(expression: String): EvaluationResult<Exception, Boolean> {
 
         //check for valid starting/ending chars
         if (invalidStart(expression)) return EvaluationResult.build { throw EvaluationError.ValidationError() }
@@ -86,7 +86,7 @@ object ValidatorImpl : IValidator {
 
     private fun isOperator(char: Char): Boolean {
         return when {
-        //not sure why I had to toString() but char.equals("+") was not working as expected
+            //not sure why I had to toString() but char.equals("+") was not working as expected
             char.toString() == "+" -> true
             char.toString() == "-" -> true
             char.toString() == "*" -> true

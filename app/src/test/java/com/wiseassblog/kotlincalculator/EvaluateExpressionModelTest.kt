@@ -1,16 +1,13 @@
 package com.wiseassblog.kotlincalculator
 
-import com.wiseassblog.kotlincalculator.data.ValidatorImpl
-import com.wiseassblog.kotlincalculator.data.datamodel.ExpressionDataModel
+import com.wiseassblog.kotlincalculator.data.implementations.CalculatorImpl
+import com.wiseassblog.kotlincalculator.data.implementations.EvaluatorImpl
+import com.wiseassblog.kotlincalculator.data.implementations.ValidatorImpl
 import com.wiseassblog.kotlincalculator.domain.domainmodel.EvaluationResult
-import com.wiseassblog.kotlincalculator.domain.repository.ICalculator
-import com.wiseassblog.kotlincalculator.domain.usecase.EvaluateExpression
-import kotlinx.coroutines.experimental.runBlocking
+import io.mockk.*
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import kotlin.test.assertTrue
 
 /**
@@ -18,43 +15,29 @@ import kotlin.test.assertTrue
  */
 class EvaluateExpressionModelTest {
 
-    @Mock
-    lateinit var calc: ICalculator
+    val calculator: CalculatorImpl = mockk()
 
-    @Mock
-    lateinit var validator: ValidatorImpl
+    val validator: ValidatorImpl = mockk()
 
-    lateinit var useCase: EvaluateExpression
+    val eval = EvaluatorImpl(calculator, validator)
 
     val EXPRESSION = "2+2"
     val ANSWER = "4"
 
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        useCase = EvaluateExpression(calc, validator)
-    }
-
     @Test
-    fun onUseCaseExecuted() = runBlocking {
+    fun onEvaluateExpression() = runBlocking {
 
-        Mockito.`when`(validator.validateExpression(EXPRESSION))
-                .thenReturn(
-                        EvaluationResult.build { true }
-                )
+        every { validator.validateExpression(EXPRESSION) } returns EvaluationResult.build { true }
 
-        Mockito.`when`(calc.evaluateExpression(EXPRESSION))
-                .thenReturn(
-                        EvaluationResult.build { ANSWER }
-                )
-
-        val result = useCase.execute(EXPRESSION)
+        coEvery { calculator.evaluateExpression(EXPRESSION) } returns EvaluationResult.build { ANSWER }
 
 
-        Mockito.verify(validator).validateExpression(EXPRESSION)
-        Mockito.verify(calc).evaluateExpression(EXPRESSION)
+        val result = eval.evaluateExpression(EXPRESSION)
 
-        if (result is EvaluationResult.Value){
+        verify { validator.validateExpression(EXPRESSION) }
+        coVerify { calculator.evaluateExpression(EXPRESSION) }
+
+        if (result is EvaluationResult.Value) {
             assertTrue { result.value == ANSWER }
         } else {
             //fail

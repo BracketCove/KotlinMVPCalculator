@@ -1,10 +1,8 @@
 package com.wiseassblog.kotlincalculator
 
-import android.app.Activity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import com.wiseassblog.kotlincalculator.dependencyinjection.Injector
 import com.wiseassblog.kotlincalculator.util.attachFragment
 import com.wiseassblog.kotlincalculator.view.CalculatorFragment

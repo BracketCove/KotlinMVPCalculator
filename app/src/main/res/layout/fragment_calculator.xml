@@ -1,8 +1,9 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_fragment_calculator"
     tools:context="com.wiseassblog.kotlincalculator.view.CalculatorFragment"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
@@ -39,7 +40,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="0dp" />
 
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gdl_display"
@@ -93,7 +94,7 @@
         app:layout_constraintBottom_toTopOf="@+id/gdl_top"
         android:layout_marginTop="0dp" />
 
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gdl_top"
@@ -149,7 +150,7 @@
         app:layout_constraintBottom_toTopOf="@+id/gdl_middle"
         app:layout_constraintTop_toTopOf="@+id/gdl_top" />
 
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gdl_middle"
@@ -207,7 +208,7 @@
         app:layout_constraintTop_toTopOf="@+id/gdl_middle"
         />
 
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gdl_bottom"
@@ -268,4 +269,4 @@
         android:layout_marginTop="0dp" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
