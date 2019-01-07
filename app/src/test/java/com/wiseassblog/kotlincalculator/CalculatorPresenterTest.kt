@@ -38,7 +38,7 @@ class CalculatorPresenterTest {
 
     @BeforeEach
     fun setUpRedundantMocks() {
-        clearMocks()
+        clearAllMocks()
         every { dispatcher.provideUIContext() } returns Dispatchers.Unconfined
         presenter.bind()
 
@@ -59,6 +59,10 @@ class CalculatorPresenterTest {
         //These are the assertions which must be satisfied in order to pass the test
         coVerify { eval.evaluateExpression(EXPRESSION) }
         coVerify { viewModel.setDisplayState(ANSWER) }
+
+        // but as well some not so important calls
+        excludeRecords { viewModel.setObserver(any()) }
+        confirmVerified(eval, viewModel)
     }
 
     @Test
@@ -70,5 +74,9 @@ class CalculatorPresenterTest {
         //These are the assertions which must be satisfied in order to pass the test
         coVerify { eval.evaluateExpression(INVALID_EXPRESSION) }
         coVerify { view.showError(VALIDATION_ERROR) }
+
+        // but as well some not so important calls
+        excludeRecords { viewModel.setObserver(any()) }
+        confirmVerified(eval, viewModel)
     }
 }
