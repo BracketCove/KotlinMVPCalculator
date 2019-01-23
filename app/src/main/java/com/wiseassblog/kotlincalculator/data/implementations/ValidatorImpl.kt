@@ -18,8 +18,51 @@ object ValidatorImpl {
         //Check for concurrent decimals and operators like "2++2"
         if (hasConcurrentOperators(expression)) EvaluationResult.build { throw EvaluationError.ValidationError() }
         if (hasConcurrentDecimals(expression)) EvaluationResult.build { throw EvaluationError.ValidationError() }
+        if (hasDecimalBeforeOperator(expression)) EvaluationResult.build { throw EvaluationError.ValidationError() }
+        if (hasDecimalAfterOperator(expression)) EvaluationResult.build { throw EvaluationError.ValidationError() }
 
         return EvaluationResult.build { true }
+    }
+
+    private fun hasDecimalAfterOperator(expression: String): Boolean {
+        expression.indices
+                .forEach {
+                    if (it < expression.lastIndex) {
+                        if (isDecimalAfterOperator(expression[it], expression[it + 1])) {
+                            return true
+                        }
+                    }
+                }
+
+        return false    }
+
+    private fun hasDecimalBeforeOperator(expression: String): Boolean {
+        expression.indices
+                .forEach {
+                    if (it < expression.lastIndex) {
+                        if (isOperatorAfterDecimal(expression[it], expression[it + 1])) {
+                            return true
+                        }
+                    }
+                }
+
+        return false
+    }
+
+    private fun isOperatorAfterDecimal(current: Char, next: Char): Boolean {
+        return if (current.toString() == "+" && next.toString() == ".") true
+        else if (current.toString() == "-" && next.toString() == ".") true
+        else if (current.toString() == "/" && next.toString() == ".") true
+        else if (current.toString() == "*" && next.toString() == ".") true
+        else false
+    }
+
+    private fun isDecimalAfterOperator(current: Char, next: Char): Boolean {
+        return if (current.toString() == "." && next.toString() == "+") true
+        else if (current.toString() == "." && next.toString() == "-") true
+        else if (current.toString() == "." && next.toString() == "*") true
+        else if (current.toString() == "." && next.toString() == "/") true
+        else false
     }
 
     private fun invalidEnd(expression: String): Boolean {
@@ -63,6 +106,8 @@ object ValidatorImpl {
         }
         return false
     }
+
+
 
     private fun hasConcurrentOperators(expression: String): Boolean {
         expression.indices

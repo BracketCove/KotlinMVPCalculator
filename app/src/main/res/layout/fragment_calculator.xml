@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_fragment_calculator"
-    tools:context="com.wiseassblog.kotlincalculator.view.CalculatorFragment"
+    tools:context="com.wiseassblog.kotlincalculator.view.CalculatorView"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
 

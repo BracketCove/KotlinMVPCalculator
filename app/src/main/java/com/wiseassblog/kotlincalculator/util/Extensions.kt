@@ -11,7 +11,3 @@ fun Activity.attachFragment(manager: FragmentManager, view: Fragment){
             .replace(R.id.root_activity_calculator, view)
             .commit()
 }
-
-fun Fragment.newInstance(injector: Injector){
-
-}
