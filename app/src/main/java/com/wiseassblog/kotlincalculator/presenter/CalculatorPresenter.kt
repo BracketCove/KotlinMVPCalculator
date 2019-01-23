@@ -29,61 +29,10 @@ class CalculatorPresenter(private var view: IViewContract.View,
 
     lateinit var jobTracker: Job
 
-
+    //I do add this in the tutorial, but forgot about it initially
     init {
         jobTracker = Job()
     }
-
-    //This will act as a dispatcher function
-    override fun onEvent(event: ViewEvent<Inputs>) {
-        when (event) {
-            ViewEvent.OnStart -> onStart()
-            ViewEvent.OnEvaluateClick -> onEvaluateClick()
-            ViewEvent.OnDeleteClick -> onDeleteClick()
-            ViewEvent.OnLongDeleteClick -> onLongDeleteClick()
-            is ViewEvent.OnOperandClick<Inputs> -> onOperandClick(event.char)
-            is ViewEvent.OnOperatorClick<Inputs> -> onOperatorClick(event.char)
-            ViewEvent.OnDestroy -> onDestroy()
-        }
-    }
-
-    private fun onDestroy() = jobTracker.cancel()
-
-    private fun onOperatorClick(char: Inputs) {
-        val state = viewModel.getDisplayState()
-        if (state != "") viewModel.setDisplayState( state + char.value )
-        else view.showError(VALIDATION_ERROR)
-    }
-
-    private fun onOperandClick(char: Inputs) = viewModel.setDisplayState(viewModel.getDisplayState() + char.value)
-
-    private fun onLongDeleteClick() = viewModel.setDisplayState("")
-
-
-    private fun onDeleteClick() {
-        val state = viewModel.getDisplayState()
-        if (state != "") viewModel.setDisplayState( state.dropLast(1) )
-    }
-
-    private fun onEvaluateClick() = launch {
-
-        val result = eval.evaluateExpression(viewModel.getDisplayState())
-
-        when (result) {
-            is EvaluationResult.Value -> viewModel.setDisplayState(result.value)
-            is EvaluationResult.Error -> view.showError(VALIDATION_ERROR)
-        }
-    }
-
-    private fun onStart() {
-        view.bindEventListener()
-        viewModel.setObserver(this)
-    }
-
-    override fun onChanged(t: String?) {
-        view.setDisplay(t ?: "")
-    }
-
 
     override val coroutineContext: CoroutineContext
         get() = dispatcher.provideUIContext() + jobTracker
