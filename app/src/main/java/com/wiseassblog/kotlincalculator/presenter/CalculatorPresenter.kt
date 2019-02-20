@@ -30,6 +30,9 @@ class CalculatorPresenter(private var view: IViewContract.View,
     lateinit var jobTracker: Job
 
 
+
+
+
     init {
         jobTracker = Job()
     }

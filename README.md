@@ -1,31 +1,18 @@
-## MVP Kotlin Calculator
+## MVP Kotlin Calculator (Coroutine Branch)
 
 The primary goal of this project was to help me learn Kotlin, and to create a better implementation
 of MVP than I have in previous years, which includes a ViewModel object (not to be confused with MVVM). 
 
 ### F.A.Q.
-**Why use complicated libraries like RxJava for a simple project?**
-
-I get this question quite a lot. It's quite simple really: They are all libraries which I have, and will continue to employ it my projects. They all have a reason, and the reason is never to
-scare anyone. 
-
-RxJava 2 is used for concurrency. Yes, I could use LiveData, AsyncTask, and other options, but I would personally recommend RxJava 2 right now. Don't be one of those annoying people that message
-me because they're pissed off they can't understand how it works. Instead, just ask me and I'll be
-happy to try and help you learn :). We all started out not knowing.
-
 **If this is MVP, what's with the ViewModel?**
 
 In previous implementations, I would maintain temporary UI state either within my Fragment (View) or my Presenter (Presenter). This is problematic, as I don't think the View, nor the Presenter, should have anything to do with storing state. This necessitated another object in my Presentation Layer which could store view state without being tightly coupled to anything.
 
-I achieve this by having my Presenter delegate temporary state to the ViewModel. As per suggestion from my Brogrammer Darel Bitsy, the ViewModel uses a PublishSubject to pass fresh data to the Presenter, whenever the Presenter receives fresh data from the 'backend'. This allows the Presenter to not have to worry about asking the VM constantly for new data, reducing repetitious code.
-
-I like Hannes Dorfmann's opinion (if I'm not mistaken about it) that the "Model" is the "state" of the application, whether it needs to exists in the backend as a Database, or a temporary ViewModel similar to this project. So what I'm saying is, it's still MVP, it's just that I call one part of the Model as a 'ViewModel' for two reasons:
+I achieve this by having my Presenter delegate temporary state to the ViewModel.
 
 1. Most people I see who make a "ViewModel" class, are actually making a ViewModel/ViewController. IMHO, if it stores the view state, ViewModel is a good name. If it also coordinates the view state, ViewModel is a **fundamentally misleading** name which has caused much confusion for people (including me). 
 
 2. You'll see it extends AAC's ViewModel class. For me to call it something different might also confuse the issue even further.
-
-If you're still freaking out, call it something else and stop whining (or whine to someone else, j'men criss).
 
 ### Architecture:
 - Presenter: Presenter is the "Logic" center of the Application. It is the thing which you must be most certain to test, as it essentially coordinates "the dance" (à la Uncle Bob), of the View and Model. It should not be full of libs (RxJava is the exception as I do need some kind of concurrency tool), and most certainly shouldn't have references to Android Framework Classes.
