@@ -3,8 +3,6 @@
     package="com.wiseassblog.kotlincalculator">
 
     <application
-        android:name=".KotlinCalculator"
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
